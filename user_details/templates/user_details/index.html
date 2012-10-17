@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% load render_table from django_tables2 %}
+
+{% block pagetitle %}Huisgenoten{% endblock %}
+
+{% block title %}Huisgenoten{% endblock %}
+
+{% block primary %}
+{% render_table table %}
+{% endblock %}

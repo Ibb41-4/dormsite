@@ -1,4 +1,6 @@
 # Django settings for dormsite project.
+import djcelery
+djcelery.setup_loader()
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,7 +13,7 @@ MANAGERS = ADMINS
 
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
+    'default': dj_database_url.config(default='postgres://ibby:balkon@localhost/dormsite')
 }
 
 #DATABASES = {
@@ -33,7 +35,7 @@ TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'nl-nl'
+LANGUAGE_CODE = 'nl-NL'
 
 SITE_ID = 1
 
@@ -126,7 +128,13 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'gunicorn',
     'djcelery',
+    'django_tables2',
     'kombu.transport.django',
+    'schedule',
+    'user_details',
+    'expenses',
+    'dinners',
+    'south'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -159,3 +167,8 @@ LOGGING = {
 }
 
 BROKER_BACKEND = 'django'
+
+AUTH_PROFILE_MODULE = 'user_details.UserProfile'
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'

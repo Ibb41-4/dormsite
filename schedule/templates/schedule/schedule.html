@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Schoonmaak rooster{% endblock %}
+
+{% block title %}Schoonmaak rooster{% endblock %}
+
+{% block primary %}
+<table>
+<thead>
+	<tr>
+		<th>Week</th><th>Keukenbeurt</th><th>Keukenbeurt</th><th>Lange Gang</th><th>Korte Gang</th>
+	</tr>
+</thead>
+<tbody>
+	{% for week in data %}
+		<tr class="{{week.current}}">
+			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
+			<td>
+				<span>{{week.1.room}}</span>
+				{% if week.current != 'future_week' %}
+					<input type="checkbox" name="shift_done" value="{{week.1.id}}" 
+						{% if week.1.done %}checked="checked"{% endif %} 
+						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
+				{% endif %}
+			</td>
+			<td>
+				<span>{{week.2.room}}</span>
+				{% if week.current != 'future_week' %}
+					<input type="checkbox" name="shift_done" value="{{week.2.id}}" 
+						{% if week.2.done %} checked="checked" {% endif %} 
+						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
+				{% endif %}
+			</td>
+			<td>
+				<span>{{week.3.room}}</span>
+				{% if week.current != 'future_week' %}
+					<input type="checkbox" name="shift_done" value="{{week.3.id}}" 
+						{% if week.3.done %} checked="checked" {% endif %} 
+						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
+				{% endif %}
+			</td>
+			<td>
+				<span>{{week.4.room}}</span>
+				{% if week.current != 'future_week' %}
+					<input type="checkbox" name="shift_done" value="{{week.4.id}}" 
+						{% if week.4.done %} checked="checked" {% endif %} 
+						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
+				{% endif %}
+			</td>
+		</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% for task in tasks %}
+	<div>
+		<h4>{{task.name}}</h4>
+		<p>{{task.description}}</p>
+	</div>
+{% endfor %}
+
+
+<div id="switch_dialog" title="Let op!">Weet je zeker dat je wilt wisselen met <span id="replace_name">naam</span></div>
+
+{% endblock %}

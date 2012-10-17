@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+        <title>{%block pagetitle %}{% endblock %} - IBB 41 4 Huissite</title>
+        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/jquery-ui-theme/jquery-ui-1.9.0.custom.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <div id="login">
+                {% if user.is_authenticated %}
+                    Je bent ingelogd als {{ user.first_name }}. <a href="{% url django.contrib.auth.views.logout %}?next=/">Uitloggen</a>
+                {% else %}
+                    Je bent niet ingelogd. <a href="{% url django.contrib.auth.views.login %}">Inloggen</a>
+                {% endif %}
+            
+            </div>
+        </header>
+
+        <div id="primary">
+            <h1>{% block title %}{% endblock %}</h1>
+            {% block primary %}{% endblock %}
+        </div>
+         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+         <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+         <script type="text/javascript" src="{{ STATIC_URL }}js/action.js"></script>
+         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.9.0.custom.min.js"></script>
+         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
+         <aside>
+            <nav>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/schedule/">Schoonmaak Rooster</a></li>
+                    <li><a href="/expenses/">Uitgaven</a></li>
+                    <li><a href="/dinners/">Eetlijst</a></li>
+                    <li><a href="/stats/">Statistieken</a></li>
+                    <li><a href="/admin/">Admin</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <footer>
+            <address>
+                Ina Boudier Bakkerlaan 41 - 4<br />
+                3582VG&nbsp;&nbsp;Utrecht<br />
+                Rekening: <br />
+                Email: <br />
+                LastFM: <br />
+                Facebook: <br />
+            </address>
+        </footer>
+    </body>
+</html>
