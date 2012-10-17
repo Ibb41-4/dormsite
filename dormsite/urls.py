@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,3 +22,6 @@ urlpatterns = patterns('',
     url(r'^accounts/login/$',  'django.contrib.auth.views.login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
 )
+
+urlpatterns += staticfiles_urlpatterns()
+
