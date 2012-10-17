@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Eetlijst{% endblock %}
+
+{% block title %}Eetlijst{% endblock %}
+
+{% block primary %}
+<form id="dinners_form" class="list_form" action="/dinners/add/" method="POST">
+{% csrf_token %}
+<table>
+<thead>
+    <tr>
+        <th>Naam</th><th>Wie eet mee</th><th>Prijs</th>
+    </tr>
+</thead>
+<tbody>
+    {% for dinner in dinner_list %}
+        <tr class="{{week.current}}">
+            <td>{{dinner.payer}}</td>
+            <td>{{dinner.eaters.all|join:', '}}</td>
+            <td>&euro; {{dinner.price}}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+<tfoot>
+    <tr>
+        <td>{{ form.payer }}</td>
+        <td>{{ form.eaters }}</td>
+        <td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
+    </tr>
+</tfoot>
+</table>
+</form>
+{% endblock %}

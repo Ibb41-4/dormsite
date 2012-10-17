@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Inloggen{% endblock %}
+
+{% block title %}Inloggen{% endblock %}
+
+{% block primary %}
+<form action='{% url django.contrib.auth.views.login %}' method='post'>
+	{% csrf_token %}
+	{{ form.as_p }}
+	
+	<input type="submit" value="login" />
+	<input type="hidden" name="next" value="{{next}}" />
+</form>
+{% endblock %}

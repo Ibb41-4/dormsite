@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Uitgaven{% endblock %}
+
+{% block title %}Uitgaven{% endblock %}
+
+{% block primary %}
+<form id="expenses_form" class="list_form" action="/expenses/add/" method="POST">
+{% csrf_token %}
+<table>
+<thead>
+	<tr>
+		<th>Naam</th><th>Beschrijving</th><th>Prijs</th>
+	</tr>
+</thead>
+<tbody>
+	{% for expense in expense_list %}
+		<tr class="{{week.current}}">
+			<td>{{expense.payer}}</td>
+			<td>{{expense.description}}</td>
+			<td>&euro; {{expense.price}}</td>
+		</tr>
+	{% endfor %}
+</tbody>
+<tfoot>
+	<tr>
+		<td>{{ form.payer }}</td>
+		<td>{{ form.description }}</td>
+		<td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
+	</tr>
+</tfoot>
+</table>
+</form>
+{% endblock %}
