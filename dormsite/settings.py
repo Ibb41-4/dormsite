@@ -13,7 +13,7 @@ MANAGERS = ADMINS
 
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost/dormsite')
+    'default': dj_database_url.config(default='postgres://ibby:balkon@localhost/dormsite')
 }
 
 #DATABASES = {
@@ -175,7 +175,11 @@ AUTH_PROFILE_MODULE = 'user_details.UserProfile'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
+IP_AUTH_USER = 'ibby'
+IP_AUTH_IP = ['145.97.206.179', '127.0.0.1']
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'iplogin.backend.IPAuthBackend')
 
 MONTHLY_FEE=12.50
+
+LOGIN_EXEMPT_URLS=[r'^static/']
