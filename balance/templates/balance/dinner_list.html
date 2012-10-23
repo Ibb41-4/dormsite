@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Eetlijst{% endblock %}
+
+{% block title %}Eetlijst{% endblock %}
+
+{% block primary %}
+<form id="dinners_form" class="list_form" action="" method="POST">
+{% csrf_token %}
+<table>
+<thead>
+    <tr>
+        <th>Naam</th><th>Wie eet mee</th><th>Prijs</th>
+    </tr>
+</thead>
+<tbody>
+    {% if dinner_list %}
+        {% for dinner in dinner_list %}
+            <tr class="{{week.current}}">
+                <td>{{dinner.payer}}</td>
+                <td>
+                    {% for eater in dinner.eater_set.all %}
+                        {{eater.user}}{% if eater.extra > 0 %}+{{eater.extra}}{% endif%}, 
+                    {% endfor %}
+                </td>
+                <td>&euro; {{dinner.price}}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr><td class="empty_table" colspan="3">Er zijn nog geen betalingen</td></tr>
+    {% endif %}
+</tbody>
+{% if perms.balance.add_dinner %}
+<tfoot>
+    <tr>
+        <td>{{ form.payer }}</td>
+        <td id="eaters">{{ form.eaters }}</td>
+        <td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
+    </tr>
+</tfoot>
+{% endif %}
+</table>
+</form>
+{% endblock %}

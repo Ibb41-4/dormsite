@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Betaald{% endblock %}
+
+{% block title %}Betaald{% endblock %}
+
+{% block primary %}
+<form id="expenses_form" class="list_form" action="" method="POST">
+{% csrf_token %}
+<table>
+<thead>
+	<tr>
+		<th>Naam</th><th>Beschrijving</th><th>Prijs</th>
+	</tr>
+</thead>
+<tbody>
+	{% if bill_list %}
+		{% for bill in bill_list %}
+			<tr class="{{week.current}}">
+				<td>{{bill.payer}}</td>
+				<td>{{bill.description}}</td>
+				<td>&euro; {{bill.price}}</td>
+			</tr>
+		{% endfor %}
+	{% else %}
+		<tr><td class="empty_table" colspan="3">Er zijn nog geen betalingen</td></tr>
+	{% endif %}
+</tbody>
+{% if perms.balance.add_bill %}
+<tfoot>
+	<tr>
+		<td>{{ form.payer }}</td>
+		<td>{{ form.description }}</td>
+		<td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
+	</tr>
+</tfoot>
+{% endif %}
+</table>
+</form>
+{% endblock %}

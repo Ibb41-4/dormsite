@@ -29,7 +29,20 @@ $(function(){
         // success identifies the function to invoke when the server response 
         // has been received 
         success:   function(data) { 
+            $('.list_form .empty_table').hide()
             $('.list_form tbody').append('<tr><td>'+data['payer']+'</td><td>'+data['description']+'</td><td>&euro; '+data['price']+'</td></tr>') 
         }
     });
+    
+    $('.list_form select').select2();
+    $('.list_form #eaters select').select2({
+        width: '350px',
+        formatSelection: function(object, container, query){
+            return object.text + ' +  <input name="'+object.id+'_extra" style="width:20px" value="0" min="0" max="50" required="required" type="number" />'
+        }
+    });
+    $('.list_form #eaters select').on("change", function(e) {
+        $('input[type=number]').spinner();
+    });
+
 })

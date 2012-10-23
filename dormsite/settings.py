@@ -13,7 +13,7 @@ MANAGERS = ADMINS
 
 import dj_database_url
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://ibby:balkon@localhost/dormsite')
+    'default': dj_database_url.config(default='postgres://localhost/dormsite')
 }
 
 #DATABASES = {
@@ -48,7 +48,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -100,6 +100,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'dormsite.middleware.LoginRequiredMiddleware',
+    'dormsite.middleware.WhodidMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -130,10 +132,11 @@ INSTALLED_APPS = (
     'djcelery',
     'django_tables2',
     'kombu.transport.django',
+    'core',
     'schedule',
     'user_details',
-    'expenses',
-    'dinners',
+    'balance',
+    'iplogin',
     'south'
 )
 
@@ -172,3 +175,7 @@ AUTH_PROFILE_MODULE = 'user_details.UserProfile'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
+
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'iplogin.backend.IPAuthBackend')
+
+MONTHLY_FEE=12.50

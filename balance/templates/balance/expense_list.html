@@ -5,7 +5,7 @@
 {% block title %}Uitgaven{% endblock %}
 
 {% block primary %}
-<form id="expenses_form" class="list_form" action="/expenses/add/" method="POST">
+<form id="expenses_form" class="list_form" action="" method="POST">
 {% csrf_token %}
 <table>
 <thead>
@@ -14,14 +14,19 @@
 	</tr>
 </thead>
 <tbody>
-	{% for expense in expense_list %}
-		<tr class="{{week.current}}">
-			<td>{{expense.payer}}</td>
-			<td>{{expense.description}}</td>
-			<td>&euro; {{expense.price}}</td>
-		</tr>
-	{% endfor %}
+    {% if expense_list %}
+		{% for expense in expense_list %}
+			<tr class="{{week.current}}">
+				<td>{{expense.payer}}</td>
+				<td>{{expense.description}}</td>
+				<td>&euro; {{expense.price}}</td>
+			</tr>
+		{% endfor %}
+	{% else %}
+		<tr><td class="empty_table" colspan="3">Er zijn nog geen betalingen</td></tr>
+	{% endif %}
 </tbody>
+{% if perms.balance.add_expense %}
 <tfoot>
 	<tr>
 		<td>{{ form.payer }}</td>
@@ -29,6 +34,7 @@
 		<td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
 	</tr>
 </tfoot>
+{% endif %}
 </table>
 </form>
 {% endblock %}

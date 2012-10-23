@@ -111,7 +111,7 @@ def assign_tasks(task, week, rooms):
 	created = False
 	shift = None
 	shuffle(rooms)
-	for room in rooms:
+	for room in [room for room in rooms if room in task.rooms.all()]:
 		if created:
 			continue
 		shift, created = Shift.objects.get_or_create(task=task, week=week, defaults={'room': room})

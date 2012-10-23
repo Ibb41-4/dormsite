@@ -78,7 +78,7 @@ td {
 	width: 100px;
 }
 
-.list_form textarea {
+.list_form textarea, .list_form select[multiple=multiple] {
 	height: 3em;
 	width: 200px;
 }
@@ -90,5 +90,10 @@ td {
 .list_form tfoot {
 	padding: 1em;
 	vertical-align: center;
-	border-top: solid rgba(0,0,0,0.2) 4px;
+	border: dashed rgba(0,0,0,0.2) 2px;
+}
+
+.list_form tfoot td {
+	border: dashed rgba(0,0,0,0.2) 2px;
+
 }

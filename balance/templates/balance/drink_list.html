@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Bierlijst{% endblock %}
+
+{% block title %}Bierlijst{% endblock %}
+
+{% block primary %}
+<form id="expenses_form" class="list_form" action="" method="POST">
+{% csrf_token %}
+<table>
+<thead>
+	<tr>
+		<th>Naam</th><th>Aantal eenheden</th><th>Prijs per eenheid</th>
+	</tr>
+</thead>
+<tbody>
+	{% if drink_list %}
+		{% for drink in drink_list %}
+			<tr class="{{week.current}}">
+				<td>{{drink.payer}}</td>
+				<td>{{drink.number}}</td>
+				<td>&euro; {{drink.price}}</td>
+			</tr>
+		{% endfor %}
+	{% else %}
+		<tr><td class="empty_table" colspan="3">Er zijn nog geen betalingen</td></tr>
+	{% endif %}
+</tbody>
+{% if perms.balance.add_drink %}
+<tfoot>
+	<tr>
+		<td>{{ form.payer }}</td>
+		<td>{{ form.number }}</td>
+		<td>{{ form.price }} <input type="submit" value="Verstuur" /></td>
+	</tr>
+</tfoot>
+{% endif %}
+</table>
+</form>
+{% endblock %}

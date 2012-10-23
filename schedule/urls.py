@@ -5,7 +5,7 @@ urlpatterns = patterns('schedule.views',
     # url(r'^$', 'dormsite.views.home', name='home'),
     # url(r'^dormsite/', include('dormsite.foo.urls')),
     
-    url(r'^$', 'schedule'),
+    url(r'^$', 'schedule', name="schedule"),
     url(r'^(?P<pk>\d+)/(?P<toggle>\w+)/', 'toggle'),
     url(r'^(?P<pk>\d+)/(?P<toggle>\w+)/', 'toggle'),
 

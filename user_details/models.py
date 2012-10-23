@@ -7,6 +7,8 @@ class UserProfile(models.Model):
     phonenumber = models.CharField(max_length=20, null=True)
     emergency_phonenumber = models.CharField(max_length=20, null=True)
     birthdate = models.DateField(null=True)
+    startdate = models.DateField(null=True)
+    enddate = models.DateField(null=True, blank=True)
 
     def __str__(self):  
           return "%s's profile" % self.user  
