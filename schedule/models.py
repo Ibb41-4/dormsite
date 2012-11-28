@@ -105,6 +105,11 @@ class Shift(models.Model):
     def __unicode__(self):
         return '%s %s %s' % (self.week, self.room, self.task)
 
+    class Meta:
+        permissions = (
+            ("view_shifts", "Can see the schedule"),
+        )
+
 
 
 

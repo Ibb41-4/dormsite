@@ -3,10 +3,14 @@ from random import shuffle
 from django_tables2 import A
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
 
 
 from schedule.models import Week, Room, Task, Shift
 from schedule.tables import WeeksTable
+
+from dormsite.decorators import class_view_decorator
+
 
 def toggle(request, pk, toggle):
 	shift = Shift.objects.get(pk=pk)
@@ -14,6 +18,7 @@ def toggle(request, pk, toggle):
 	shift.save()
 	return HttpResponse('')
 
+@permission_required('balance.view_shifts')
 def schedule(request):
     #Week.objects.filter(startdate__gt=zz)
     current_week = Week.get_current_week()

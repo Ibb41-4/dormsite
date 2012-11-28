@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import simplejson
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import permission_required
 
 
 from core.views import TabledFormView
@@ -13,8 +14,9 @@ from user_details.models import User
 from .models import Balance, BalanceRow
 from .models import Bill, Dinner, Expense, Drink
 from .forms import BillsForm, ExpensesForm, DrinksForm, DinnersForm
+from dormsite.decorators import class_view_decorator
 
-
+@class_view_decorator(permission_required('balance.view_balance'))
 class BalanceView(DetailView):
     model = Balance
 
@@ -24,11 +26,12 @@ class BalanceView(DetailView):
         else:
             return self.model.get_latest()
 
-
+@class_view_decorator(permission_required('balance.add_bill'))
 class BillsView(TabledFormView):
     model = Bill
     form_class = BillsForm
 
+@class_view_decorator(permission_required('balance.add_drink'))
 class DrinksView(TabledFormView):
     model = Drink
     form_class = DrinksForm
@@ -36,11 +39,12 @@ class DrinksView(TabledFormView):
     def create_response(self, instance):
         return {'payer': unicode(instance.payer), 'description': instance.number, 'price': float(instance.price)}
 
-
+@class_view_decorator(permission_required('balance.add_expense'))
 class ExpensesView(TabledFormView):
     model = Expense
     form_class = ExpensesForm
 
+@class_view_decorator(permission_required('balance.add_dinner'))
 class DinnersView(TabledFormView):
     template_name = 'dinners/index.html'
     model = Dinner
@@ -55,7 +59,7 @@ class DinnersView(TabledFormView):
     def create_response(self, instance):
         return {'payer': unicode(instance.payer), 'description': ', '.join(map(lambda x: unicode(x.user)+(u'+'+unicode(x.extra) if x.extra > 0  else u''), instance.eater_set.all())), 'price': float(instance.price)}
 
-
+@permission_required('balance.create_balance')
 def make_balance(request):
     request.user.has_perm('balance.add_balance')
     new_balance = Balance.objects.get(preview=True)

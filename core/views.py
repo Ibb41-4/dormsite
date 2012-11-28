@@ -14,7 +14,7 @@ from balance.models import Balance
 class DefaultDetailView(DetailView):
     def get_object(self, queryset=None):
         try: 
-            return self.model.objects.filter(preview=False).latest()
+            return self.model.objects.filter(preview=False).latest('created')
         except self.model.DoesNotExist:
             return self.model(created=date.today)
 

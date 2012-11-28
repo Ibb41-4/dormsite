@@ -16,7 +16,7 @@ class Balance(TrackableModel):
     @classmethod
     def get_latest(cls):
         try: 
-            return cls.objects.filter(preview=False).latest()
+            return cls.objects.filter(preview=False).latest('created')
         except cls.DoesNotExist:
             return cls(created=datetime.now())   
 
@@ -120,6 +120,10 @@ class Balance(TrackableModel):
             balance_row.drinks = sum_drinks
             balance_row.total = total
             balance_row.save()
+    class Meta:
+        permissions = (
+            ("view_balance", "Can see balances"),
+        )
 
 def number_months(startdate, enddate):
     """
