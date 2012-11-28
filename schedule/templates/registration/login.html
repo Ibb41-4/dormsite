@@ -5,7 +5,7 @@
 {% block title %}Inloggen{% endblock %}
 
 {% block primary %}
-<form action='{% url django.contrib.auth.views.login %}' method='post'>
+<form action="{% url 'django.contrib.auth.views.login' %}" method="post">
 	{% csrf_token %}
 	{{ form.as_p }}
 	
@@ -13,5 +13,5 @@
 	<input type="hidden" name="next" value="{{next}}" />
 </form>
 
-<p>Klik <a href="{% url iplogin.views.login %}">hier</a> als dit de huis pc is</p>
+<p>Klik <a href="{% url 'iplogin.views.login' %}">hier</a> als dit de huis pc is</p>
 {% endblock %}

@@ -2,8 +2,7 @@ from datetime import date, datetime, timedelta
 from math import floor
 
 from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
+from django.conf import settings 
 
 
 # Create your models here.
@@ -84,7 +83,7 @@ class Task(models.Model):
     
 class Room(models.Model):
     number = models.PositiveIntegerField()
-    user = models.OneToOneField(User, null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="room")
     tasks = models.ManyToManyField(Task, related_name="rooms")
 
     def __unicode__(self):
@@ -92,6 +91,9 @@ class Room(models.Model):
             return unicode(self.user)
         else:
             return 'Kamer %s' % self.number
+
+    class Meta:
+        ordering = ['number']
             
 
 class Shift(models.Model):

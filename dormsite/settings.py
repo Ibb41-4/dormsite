@@ -171,7 +171,7 @@ LOGGING = {
 
 BROKER_BACKEND = 'django'
 
-AUTH_PROFILE_MODULE = 'user_details.UserProfile'
+AUTH_USER_MODEL = 'user_details.User'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'

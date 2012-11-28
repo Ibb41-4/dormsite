@@ -1,6 +1,5 @@
 from datetime import date, datetime
 
-from django.contrib.auth.models import User
 from django.conf import settings 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -9,6 +8,7 @@ from django.views.generic import DetailView
 
 
 from core.views import TabledFormView
+from user_details.models import User
 
 from .models import Balance, BalanceRow
 from .models import Bill, Dinner, Expense, Drink

@@ -2,12 +2,12 @@ from datetime import date, datetime
 from decimal import Decimal
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models.signals import post_init
 from django.conf import settings 
 
 
 from core.models import TrackableModel
+from user_details.models import User
 
 
 class Balance(TrackableModel):
@@ -65,11 +65,10 @@ class Balance(TrackableModel):
                 previous_total = 0
 
             #skip user which don't live here yet or not anymore and have a total of zero
-            user_profile = user.get_profile()
             today = date.today()
-            if not user_profile.startdate or (user_profile.startdate > today
-                or  ( user_profile.enddate 
-                    and user_profile.enddate < previous_balance.created 
+            if not user.startdate or (user.startdate > today
+                or  ( user.enddate 
+                    and user.enddate < previous_balance.created 
                     and previous_total == 0 )):
                 continue
 
@@ -90,8 +89,8 @@ class Balance(TrackableModel):
 
 
             #calculate monthly fee using proper start and end dates
-            startdate = max(previous_balance.created.date(), user_profile.startdate)
-            enddate = min(date.today(), user_profile.enddate) if user_profile.enddate else date.today()
+            startdate = max(previous_balance.created.date(), user.startdate)
+            enddate = min(date.today(), user.enddate) if user.enddate else date.today()
             monthly_fee = Decimal(settings.MONTHLY_FEE * number_months(startdate, enddate))
          
             #calculate totals
@@ -132,7 +131,7 @@ def number_months(startdate, enddate):
 post_init.connect(Balance.update_preview, Balance)
 
 class BalanceRow(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     balance = models.ForeignKey(Balance, related_name="rows")
     last_balance = models.DecimalField(max_digits=7, decimal_places=2)
     payed = models.DecimalField(max_digits=7, decimal_places=2)
@@ -143,7 +142,7 @@ class BalanceRow(models.Model):
     total = models.DecimalField(max_digits=7, decimal_places=2)
 
 class PaymentModel(TrackableModel):
-    payer = models.ForeignKey(User, related_name="payed_%(class)ss")
+    payer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="payed_%(class)ss")
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     class Meta:
@@ -172,12 +171,12 @@ class Drink(PaymentModel):
         return u"%s eenheden a %s door %s" % (self.number, self.price, self.user)
 
 class Dinner(PaymentModel):
-    eaters = models.ManyToManyField(User, related_name="%(class)ss", through='Eater')
+    eaters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="%(class)ss", through='Eater')
     
     def __unicode__(self):
         return u"Eten voor %s" % self.price
 
 class Eater(models.Model):
     dinner = models.ForeignKey(Dinner)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     extra = models.PositiveIntegerField()

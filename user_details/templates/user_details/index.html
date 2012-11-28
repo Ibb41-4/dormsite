@@ -8,4 +8,10 @@
 
 {% block primary %}
 {% render_table table %}
+
+<p>Email alle huisgenoten: <a href="mailto: 
+	{% for user in users %}
+		{{user.first_name}} {{user.last_name}} <{{user.email}}>;
+	{% endfor %}
+">Klik hier</a></p>
 {% endblock %}

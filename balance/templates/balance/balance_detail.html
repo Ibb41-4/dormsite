@@ -7,13 +7,13 @@
 {% block primary %}
 <p>
 {% if balance.previous.pk %}
-    <a href="{% url balance balance.previous.pk %}">&lt;- Vorige</a> 
+    <a href="{% url 'balance' balance.previous.pk %}">&lt;- Vorige</a> 
 {% else %}
     &lt;- Vorige
 {% endif %}
- - <a href="{% url balance %}">Huidige</a> - 
+ - <a href="{% url 'balance' %}">Huidige</a> - 
 {% if balance.next.pk %}
-    <a href="{% url balance balance.next.pk %}">Volgende -&gt;</a>
+    <a href="{% url 'balance' balance.next.pk %}">Volgende -&gt;</a>
 {% else %}
     Volgende -&gt;
 {% endif %}
@@ -22,7 +22,7 @@
     <p>
         <em>Dit is een voorlopige afrekening</em><br />
         {% if perms.balance.add_balance and balance.preview %}
-            Klik <a href="{% url make_balance %}" >hier</a> om deze afrekening definitief te maken
+            Klik <a href="{% url 'make_balance' %}" >hier</a> om deze afrekening definitief te maken
         {% endif %}
     </p>
 {% endif %}
