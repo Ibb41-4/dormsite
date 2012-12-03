@@ -5,9 +5,9 @@
     "fields": {
       "preview": false, 
       "created_by": 1, 
-      "created": "1970-01-01T00:00:00.000Z",
+      "created": "1970-01-01T00:00:00.000",
       "modified_by": 1, 
-      "modified": "1970-01-01T00:00:00.000Z"
+      "modified": "1970-01-01T00:00:00.000"
     }
   }, 
   {
@@ -16,9 +16,9 @@
     "fields": {
       "preview": true, 
       "created_by": 1, 
-      "created": "1970-01-02T00:00:00.000Z",
+      "created": "1970-01-02T00:00:00.000",
       "modified_by": 1, 
-      "modified": "1970-01-02T00:00:00.000Z"
+      "modified": "1970-01-02T00:00:00.000"
     }
   }
 ]

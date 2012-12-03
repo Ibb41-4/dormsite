@@ -1,5 +1,8 @@
 # Django settings for dormsite project.
 import djcelery
+import dj_database_url
+import os
+
 djcelery.setup_loader()
 
 DEBUG = True
@@ -9,11 +12,15 @@ ADMINS = (
      ('Hiram', 'ibb41-4dormsite@hmvp.nl'),
 )
 
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../')) 
+
+
 MANAGERS = ADMINS
 
-import dj_database_url
+
+
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://ibby:balkon@localhost/dormsite')
+    'default': dj_database_url.config(default='sqlite:///'+PROJECT_DIR+'/database.sqlite3')
 }
 
 #DATABASES = {
