@@ -8,17 +8,44 @@ $(function(){
 
     //$('#current_week').replaceWith('</tbody></table><table class="zoomed">' +  + '</table><table><tbody>')
 
-    $( ".future_week span" ).draggable({revert: true, snap: true, snapModeType: 'outer'}).disableSelection();
-    $( ".future_week span" ).droppable({
+    $( ".switchable span" ).draggable({revert: true, revertDuration: 0, snap: true, snapModeType: 'outer'}).disableSelection();
+    $( ".switchable span" ).droppable({
         drop: function( event, ui ) {
-            $( this ).find( "p" ).html( "Dropped!" );
-            $( "#switch_dialog" ).dialog({
+            //$("#replace_name").html($(this).html())
+
+            var first = this
+            var id1 = first.id.substring(5)
+            var other = ui.draggable.get(0)
+            var id2 = other.id.substring(5)
+
+            function swapNodes(a, b) {
+                var aparent= a.parentNode;
+                var asibling= a.nextSibling===b? a : a.nextSibling;
+                b.parentNode.insertBefore(a, b);
+                aparent.insertBefore(b, asibling);
+            }
+
+            $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {success: function(){
+                swapNodes(first.firstChild, other.firstChild)
+            }})
+            /*
+
+            $("#switch_dialog" ).dialog({
                 height: 140,
                 modal: true,
                 draggable: true,
                 resizable: false,
-            });
-        }
+                buttons: [ 
+                    { text: "Ok", click: function() { 
+
+                        $( this ).dialog( "close" ); 
+                    }},
+                    { text: "Annuleer", click: function() { 
+                        $( this ).dialog( "close" ); 
+                    }}
+                ]
+            });*/
+        }, activeClass: "highlight"
     });
 
     // bind form and provide a simple callback function 

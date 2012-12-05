@@ -2,8 +2,9 @@ from random import shuffle
 
 from django_tables2 import A
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import permission_required
+from django.forms.models import model_to_dict
 
 
 from schedule.models import Week, Room, Task, Shift
@@ -18,40 +19,49 @@ def toggle(request, pk, toggle):
 	shift.save()
 	return HttpResponse('')
 
-@permission_required('balance.view_shifts')
+@permission_required('schedule.view_shifts')
 def schedule(request):
-    #Week.objects.filter(startdate__gt=zz)
     current_week = Week.get_current_week()
     weeks = current_week.get_weeks(-7)
     weeks += current_week.get_weeks(27)[1:]
+    return render(request, 'schedule/schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
 
-    data = []
-    current = 'past_week'
-    for week in weeks:
-    	assign_weeks(week)
-    	if current_week is week:
-    		current = 'current_week'
-    	weekdata = {'Week': week.startdate, 'startdate': week.startdate, 'current': current }
+@permission_required('schedule.view_shifts')
+def print_schedule(request):
+    current_week = Week.get_current_week()
+    weeks = current_week.get_weeks(21)
+    return render(request, 'schedule/print_schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
 
-    	if current == 'current_week':
-    		current = 'future_week'
+@permission_required('schedule.view_shifts')
+def switch_shifts(request, id1, id2):
+	shift1 = Shift.objects.get(pk=id1)
+	shift2 = Shift.objects.get(pk=id2)
 
-    	for task in week.tasks:
-    		shift = Shift.objects.get(week=week, task=task)
-    		weekdata[task.id] = {
-    			'room':shift.room, 
-    			'id': shift.id,
-    			'done': shift.done,
-    		}
+	#only modify your own shifts, unless you have rights
+	if not request.user == shift1.room.user and not request.user == shift2.room.user:
+		if not request.user.has_perm('shift.can_switch_others'):
+			return HttpResponseForbidden("own")
 
-    	data.append(weekdata)
-  #  d = list(list(s)[0].shifts
+	#only modify shifts so that the right person is doing the right tasks
+	if not shift1.task in shift2.room.tasks.all() or not shift2.task in shift1.room.tasks.all():
+		return HttpResponseForbidden("tasks")
 
-   # x = A("shifts.0").resolve(s[1])
-   # x()
-    table = WeeksTable(data)
-    table.paginate(page=request.GET.get('page', 1), per_page=35)
-    return render(request, 'schedule/schedule.html', {'data': data, 'tasks': Task.objects.all()})
+	#only modify current or future shifts
+	if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
+		return HttpResponseForbidden("past")
+
+	#only modify if two different rooms
+	if shift1.room == shift2.room:
+		return HttpResponseForbidden("same")
+
+	#everything is fine, proceed
+	shift1.room, shift2.room = shift2.room, shift1.room
+	shift1.save()
+	shift2.save()
+
+	#TODO:Email
+	return HttpResponse('true')
+
 
 def assign_weeks(week):
 	weeks = week.get_weeks(7)
@@ -116,7 +126,7 @@ def assign_tasks(task, week, rooms):
 	created = False
 	shift = None
 	shuffle(rooms)
-	for room in [room for room in rooms if room in task.rooms.all()]:
+	for room in rooms: #[room for room in rooms if room in task.rooms.all()]:
 		if created:
 			continue
 		shift, created = Shift.objects.get_or_create(task=task, week=week, defaults={'room': room})

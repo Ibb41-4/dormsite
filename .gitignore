@@ -30,3 +30,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 celerybeat-schedule
+
+
+*.sqlite3
+celery.db

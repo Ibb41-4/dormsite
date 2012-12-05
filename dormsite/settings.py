@@ -190,3 +190,11 @@ AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'iplogin
 MONTHLY_FEE=12.50
 
 LOGIN_EXEMPT_URLS=[r'^static/']
+
+#EMAIL_HOST=smtp.surfnet.uu.nl
+
+#EMAIL_PORT=
+
+EMAIL_USE_TLS=True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -8,49 +8,33 @@
 <table>
 <thead>
 	<tr>
-		<th>Week</th><th>Keukenbeurt</th><th>Keukenbeurt</th><th>Lange Gang</th><th>Korte Gang</th>
+		<th>Week</th>
+		{% for task in tasks %}
+			<th>{{task.name}}</th>
+		{% endfor %}
 	</tr>
 </thead>
 <tbody>
 	{% for week in data %}
-		<tr class="{{week.current}}">
+		<tr class="{{week.type}} {% if week.type != 'past_week' %}switchable{% endif %}">
 			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
-			<td>
-				<span>{{week.1.room}}</span>
-				{% if week.current != 'future_week' %}
-					<input type="checkbox" name="shift_done" value="{{week.1.id}}" 
-						{% if week.1.done %}checked="checked"{% endif %} 
-						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
-				{% endif %}
-			</td>
-			<td>
-				<span>{{week.2.room}}</span>
-				{% if week.current != 'future_week' %}
-					<input type="checkbox" name="shift_done" value="{{week.2.id}}" 
-						{% if week.2.done %} checked="checked" {% endif %} 
-						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
-				{% endif %}
-			</td>
-			<td>
-				<span>{{week.3.room}}</span>
-				{% if week.current != 'future_week' %}
-					<input type="checkbox" name="shift_done" value="{{week.3.id}}" 
-						{% if week.3.done %} checked="checked" {% endif %} 
-						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
-				{% endif %}
-			</td>
-			<td>
-				<span>{{week.4.room}}</span>
-				{% if week.current != 'future_week' %}
-					<input type="checkbox" name="shift_done" value="{{week.4.id}}" 
-						{% if week.4.done %} checked="checked" {% endif %} 
-						{% if week.current == 'past_week' %}disabled="disabled"{% endif %}>
-				{% endif %}
-			</td>
+
+			{% for shift in week.shifts.all %}
+				<td>
+					<span id="shift{{shift.pk}}">{{shift.room}}</span>
+					{% if week.type != 'future_week' %}
+						<input type="checkbox" name="shift_done" value="{{shift.pk}}" 
+							{% if shift.done %}checked="checked"{% endif %} 
+							{% if week.type == 'past_week' %}disabled="disabled"{% endif %}>
+					{% endif %}
+				</td>
+			{% endfor %}
 		</tr>
 	{% endfor %}
 </tbody>
 </table>
+
+<p><a href="{% url 'schedule.views.print_schedule' %}">Print dit rooster.</a> <a href="{% url 'ical_schedule' user.pk %}">Importeer dit in een kalenderdapplicatie.</a></p>
 
 {% for task in tasks %}
 	<div>

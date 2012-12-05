@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+    </head>
+    <body>
+      	<p>Hoi {{user.first_name}},</p>
+
+        <p>Je hebt komende week {{task.name}}-beurt. Vergeet je niet om daar tijd voor vrij te maken? Als je niet kan, ruil je dan met iemand? Vergeet dat niet ook hier aan te passen: {% url 'schedule.views.schedule' %}</p>
+    </body>
+</html>

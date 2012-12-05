@@ -9,6 +9,9 @@ from django.conf import settings
 
 class Week(models.Model):
     WEEKS = map(lambda x: (x,'Week %s' % x), range(1,54))
+    CURRENT = "current_week"
+    FUTURE = "future_week"
+    PAST = "past_week"
 
     number = models.PositiveIntegerField(choices=WEEKS)
     year = models.PositiveIntegerField(default=date.today().year)
@@ -18,13 +21,14 @@ class Week(models.Model):
         return tofirstdayinisoweek(self.year, self.number)
 
     @property
-    def tasks(self):
-        return list(Task.objects.filter(shifts__week = self))
-
-    @property
-    def task1(self):
-        return Task.objects.filter(shifts__week = self)[0]
-
+    def type(self):
+        current_year, current_week_number, ignore = date.today().isocalendar()
+        if current_year == self.year and current_week_number == self.number:
+            return self.CURRENT
+        elif current_year < self.year or (current_year == self.year and current_week_number < self.number):
+            return self.FUTURE
+        else:
+            return self.PAST
 
     @property
     def is_filled(self):
@@ -108,6 +112,7 @@ class Shift(models.Model):
     class Meta:
         permissions = (
             ("view_shifts", "Can see the schedule"),
+            ("can_switch_others", "Can switch other shifts than his own"),
         )
 
 

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+        <title>{%block pagetitle %}{% endblock %} - IBB 41 4 Huissite</title>
+        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/print_style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="primary">
+            <h1>{% block title %}{% endblock %}</h1>
+            {% block primary %}{% endblock %}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+
+
+body {
+	font-size: 8pt;
+}
+
+#primary {
+	margin: 0 2em;
+}
+
+th {
+	border: solid rgba(0,0,0,0.2) 1px;
+	background: rgba(200,200,100,0.2);
+	opacity: 50%;
+	padding: 1px 5px;
+	color: #0088CC;
+}
+
+h1 
+{
+	font-size: 12pt;
+	line-height: 1em;
+	text-align: center;
+}
+
+h2
+{
+	font-size: 10pt;
+	line-height: 1em;
+	margin-bottom: 0;
+}
+
+td {
+	padding: 1px 5px;
+	text-align: right;
+	border: solid rgba(0,0,0,0.2) 1px;
+	width: 8em;
+}
+
+

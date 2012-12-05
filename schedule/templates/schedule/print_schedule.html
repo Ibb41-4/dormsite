@@ -1,0 +1,37 @@
+{% extends "print_base.html" %}
+
+{% block pagetitle %}Schoonmaak rooster{% endblock %}
+
+{% block title %}Schoonmaak rooster{% endblock %}
+
+{% block primary %}
+<table>
+<thead>
+	<tr>
+		<th>Week</th>
+		{% for task in tasks %}
+			<th>{{task.name}}</th>
+		{% endfor %}
+	</tr>
+</thead>
+<tbody>
+	{% for week in data %}
+		<tr class="{{week.type}}">
+			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
+
+			{% for shift in week.shifts.all %}
+				<td>{{shift.room}}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% for task in tasks %}
+	<div>
+		<h2>{{task.name}}</h2>
+		<p>{{task.description}}</p>
+	</div>
+{% endfor %}
+
+{% endblock %}
