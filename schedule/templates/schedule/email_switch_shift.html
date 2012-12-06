@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+    </head>
+    <body>
+      	<p>Hoi {{shift1.room.user.first_name}} en {{shift2.room.user.first_name}},</p>
+
+        <p>Iemand heeft jullie beurt geruild. Klopt dit niet? Verander het dan even terug!</p>
+
+        <p>Het gaat om de volgende beurten: <br />
+        	De {{shift1.task}} van {{shift1.week.startdate|date}};<br />
+        	De {{shift2.task}} van {{shift2.week.startdate|date}};
+        </p>
+    </body>
+</html>

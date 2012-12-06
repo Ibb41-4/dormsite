@@ -5,6 +5,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import permission_required
 from django.forms.models import model_to_dict
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
 
 
 from schedule.models import Week, Room, Task, Shift
@@ -54,6 +57,11 @@ def switch_shifts(request, id1, id2):
     if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
         return HttpResponseForbidden("past")
 
+    #only modify from different weeks
+    if shift1.week == shift2.week:
+        return HttpResponseForbidden("week")
+
+
     #only modify if two different rooms
     if shift1.room == shift2.room:
         return HttpResponseForbidden("same")
@@ -63,9 +71,25 @@ def switch_shifts(request, id1, id2):
     shift1.save()
     shift2.save()
 
-    #TODO:Email
+    email_switch_shift(shift1, shift2)
+
     return HttpResponse('true')
 
+
+def email_switch_shift(shift1, shift2):
+    plaintext = get_template('schedule/email_switch_shift.html')
+    html      = get_template('schedule/email_switch_shift.html')
+    subject   = get_template('schedule/email_switch_shift_subject.txt')
+
+    d = Context({ 'shift1': shift1, 'shift2': shift2 })
+
+    from_email, to = 'no-reply@huissite.hmvp.nl', [shift1.room.user.email, shift2.room.user.email]
+    subject_content = subject.render(d)
+    text_content = plaintext.render(d)
+    html_content = html.render(d)
+    msg = EmailMultiAlternatives(subject_content, text_content, from_email, to)
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
 '''
 Matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
