@@ -144,7 +144,8 @@ INSTALLED_APPS = (
     'user_details',
     'balance',
     'iplogin',
-    'south'
+    'south',
+    'django.contrib.markup'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -197,4 +198,4 @@ LOGIN_EXEMPT_URLS=[r'^static/']
 
 EMAIL_USE_TLS=True
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

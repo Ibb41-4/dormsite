@@ -86,7 +86,7 @@ class Week(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.name

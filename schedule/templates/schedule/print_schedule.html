@@ -1,5 +1,7 @@
 {% extends "print_base.html" %}
 
+{% load markup %}
+
 {% block pagetitle %}Schoonmaak rooster{% endblock %}
 
 {% block title %}Schoonmaak rooster{% endblock %}
@@ -28,10 +30,12 @@
 </table>
 
 {% for task in tasks %}
-	<div>
-		<h2>{{task.name}}</h2>
-		<p>{{task.description}}</p>
-	</div>
+	{% if task.description %}
+		<div>
+			<h2>{{task.name}}</h2>
+			<p>{{task.description|markdown}}</p>
+		</div>
+	{% endif %}
 {% endfor %}
 
 {% endblock %}
