@@ -6,9 +6,8 @@ dj-database-url==0.2.1
 django-celery==3.0.10
 django-tables2==0.13.0
 Django-Select2==3.1.4
+django-ical==1.1
 gunicorn==0.14.6
 kombu==2.4.7
 psycopg2==2.4.5
 python-dateutil==1.5
-pytz==2012f
-wsgiref==0.1.2
