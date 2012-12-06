@@ -197,4 +197,4 @@ LOGIN_EXEMPT_URLS=[r'^static/']
 
 EMAIL_USE_TLS=True
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'

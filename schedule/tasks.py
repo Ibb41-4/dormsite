@@ -9,7 +9,7 @@ from django.template import Context
 from .models import Shift, Week
 
 # this will run every minute, see http://celeryproject.org/docs/reference/celery.task.schedules.html#celery.task.schedules.crontab
-@periodic_task(run_every=crontab(hour="0", minute="0", day_of_week="5"))
+@periodic_task(run_every=crontab(hour="0", minute="0", day_of_week="2"))
 def notify_schedule():    
     notify_last_week()
     notify_next_week()
