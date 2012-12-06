@@ -11,3 +11,4 @@ gunicorn==0.14.6
 kombu==2.4.7
 psycopg2==2.4.5
 python-dateutil==1.5
+Markdown==2.2.1
