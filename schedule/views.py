@@ -121,7 +121,7 @@ def assign_weeks(startingweek):
 
 def shift(seq, n):
     n = n % len(seq)
-    return seq[n:] + seq[:n]
+    return seq[-n:] + seq[:-n]
 
 def create_kortegang(startingweek):
     """recreate the last used order of rooms for the kortegang task (see the matrix)"""
