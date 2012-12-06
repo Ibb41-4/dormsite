@@ -31,26 +31,32 @@ class Week(models.Model):
             return self.PAST
 
     @property
+    def tasks(self):
+        return list(Task.objects.filter(shifts__week=self))
+
+    @property
     def is_filled(self):
         return len(self.tasks) > 0
 
-    def previous(self):
-        number = self.number - 1
+    def previous_week(self, number=1):
+        number = self.number - number
         year = self.year
+        year_length = 53 if is_long_year(self.year) else 52
 
         if number < 1:
             year -= 1
-            number = 53 if is_long_year(year) else 52
+            number = year_length if number == 0 else number % year_length
 
         week, created = Week.objects.get_or_create(number=number, year=year)
         return week
 
-    def next(self):
-        number = self.number + 1
+    def next_week(self, number=1):
+        number = self.number + number
         year = self.year
+        year_length = 53 if is_long_year(self.year) else 52
 
-        if number > (53 if is_long_year(self.year) else 52):
-            number = 1
+        if number > year_length:
+            number = number % year_length
             year += 1
 
         week, created = Week.objects.get_or_create(number=number, year=year)
@@ -60,10 +66,10 @@ class Week(models.Model):
         weeks = [self]
         if number > 0:
             for i in range(0, number-1):
-                weeks.append(weeks[-1].next())
+                weeks.append(weeks[-1].next_week())
         else:
             for i in range(number, 0):
-                weeks.insert(0, weeks[0].previous())
+                weeks.insert(0, weeks[0].previous_week())
 
         return weeks
 
@@ -76,7 +82,7 @@ class Week(models.Model):
 
 
     def __unicode__(self):
-        return 'De week beginnende bij: %s' % self.startdate
+        return 'Week {0} beginnend op: {1}'.format(self.number, self.startdate.date().isoformat())
 
 class Task(models.Model):
     name = models.CharField(max_length=200)
@@ -114,6 +120,7 @@ class Shift(models.Model):
             ("view_shifts", "Can see the schedule"),
             ("can_switch_others", "Can switch other shifts than his own"),
         )
+        unique_together = ('week', 'task',)
 
 
 

@@ -14,16 +14,20 @@ from dormsite.decorators import class_view_decorator
 
 
 def toggle(request, pk, toggle):
-	shift = Shift.objects.get(pk=pk)
-	shift.done = True if toggle == 'on' else False
-	shift.save()
-	return HttpResponse('')
+    shift = Shift.objects.get(pk=pk)
+    shift.done = True if toggle == 'on' else False
+    shift.save()
+    return HttpResponse('')
 
 @permission_required('schedule.view_shifts')
 def schedule(request):
-    current_week = Week.get_current_week()
-    weeks = current_week.get_weeks(-7)
-    weeks += current_week.get_weeks(27)[1:]
+    start_week = Week.get_current_week().previous_week(7)
+
+    weeks = start_week.get_weeks(35)
+    
+    for week in weeks:
+        assign_weeks(week)
+
     return render(request, 'schedule/schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
 
 @permission_required('schedule.view_shifts')
@@ -34,100 +38,99 @@ def print_schedule(request):
 
 @permission_required('schedule.view_shifts')
 def switch_shifts(request, id1, id2):
-	shift1 = Shift.objects.get(pk=id1)
-	shift2 = Shift.objects.get(pk=id2)
+    shift1 = Shift.objects.get(pk=id1)
+    shift2 = Shift.objects.get(pk=id2)
 
-	#only modify your own shifts, unless you have rights
-	if not request.user == shift1.room.user and not request.user == shift2.room.user:
-		if not request.user.has_perm('shift.can_switch_others'):
-			return HttpResponseForbidden("own")
+    #only modify your own shifts, unless you have rights
+    if not request.user == shift1.room.user and not request.user == shift2.room.user:
+        if not request.user.has_perm('shift.can_switch_others'):
+            return HttpResponseForbidden("own")
 
-	#only modify shifts so that the right person is doing the right tasks
-	if not shift1.task in shift2.room.tasks.all() or not shift2.task in shift1.room.tasks.all():
-		return HttpResponseForbidden("tasks")
+    #only modify shifts so that the right person is doing the right tasks
+    if not shift1.task in shift2.room.tasks.all() or not shift2.task in shift1.room.tasks.all():
+        return HttpResponseForbidden("tasks")
 
-	#only modify current or future shifts
-	if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
-		return HttpResponseForbidden("past")
+    #only modify current or future shifts
+    if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
+        return HttpResponseForbidden("past")
 
-	#only modify if two different rooms
-	if shift1.room == shift2.room:
-		return HttpResponseForbidden("same")
+    #only modify if two different rooms
+    if shift1.room == shift2.room:
+        return HttpResponseForbidden("same")
 
-	#everything is fine, proceed
-	shift1.room, shift2.room = shift2.room, shift1.room
-	shift1.save()
-	shift2.save()
+    #everything is fine, proceed
+    shift1.room, shift2.room = shift2.room, shift1.room
+    shift1.save()
+    shift2.save()
 
-	#TODO:Email
-	return HttpResponse('true')
-
-
-def assign_weeks(week):
-	weeks = week.get_weeks(7)
-	if any(map(lambda week: week.is_filled, weeks)):
-		return
-	else:
-		rooms, excluded_rooms = make_room_list(week)
-
-		split_week_old_rooms = []
-
-		first_of_new_set = True
-		split_week2 = False
-		for week in weeks:
-			split_week = False
-			rooms_without_split = []
-			#split week, ie we have less rooms then tasks and we need to add some from the next set
-			if len(rooms) < len(Task.objects.all()):
-				first_of_new_set = True
-				split_week = True
-				split_week_old_rooms = rooms
-				new_rooms, excluded_rooms = make_room_list(week)
-				rooms_without_split = [room for room in new_rooms if not room in split_week_old_rooms]
-				shuffle(rooms_without_split)
-				split_week_new_rooms = rooms_without_split[0:2]
-				rooms_without_split = rooms_without_split[2:]
-				rooms = split_week_old_rooms + split_week_new_rooms
-
-			rooms = assign_week(week, rooms)
-			
-			if split_week:
-				split_week = False
-				split_week2 = True
-				rooms = rooms_without_split
-
-			if split_week2:
-				split_week2 = False
-				rooms = rooms + split_week_old_rooms
-
-			if first_of_new_set:
-				first_of_new_set = False
-				rooms = rooms + excluded_rooms
-
-def assign_week(week, rooms):
-	for task in Task.objects.all():
-		room = assign_tasks(task, week, rooms)
-		rooms.remove(room)
-	return rooms
+    #TODO:Email
+    return HttpResponse('true')
 
 
-def make_room_list(week):
-	prev_week = week.previous()
-	excluded_rooms = list(Room.objects.filter(shifts__week = prev_week))
-	rooms = list(Room.objects.all())
-	
-	for room in excluded_rooms:
-		rooms.remove(room)
+'''
+Matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
+7 weeks and 4 tasks, in proper order (position 4 is kortegang etc)
+'''
 
-	return rooms, excluded_rooms
+matrix = [[4,9,6,1],[5,10,7,2],[13,14,8,4],[12,11,9,3],[6,13,10,5],[7,14,11,1],[8,3,12,2]]
+
+def assign_weeks(startingweek):
+    if startingweek.is_filled:
+        return
+
+    if startingweek.previous_week().is_filled:
+        kortegang = create_kortegang(startingweek)
+        langegang = create_langegang(startingweek)
+    else:
+        kortegang = list(Task.objects.get(pk=4).rooms.all()) #korte gang
+        langegang = list(Task.objects.get(pk=3).rooms.all()) #lange gang
+    
+    current_week = startingweek
 
 
-def assign_tasks(task, week, rooms):
-	created = False
-	shift = None
-	shuffle(rooms)
-	for room in rooms: #[room for room in rooms if room in task.rooms.all()]:
-		if created:
-			continue
-		shift, created = Shift.objects.get_or_create(task=task, week=week, defaults={'room': room})
-	return shift.room
+    # make sure they dont get the same order as last set
+    kortegang = shift(kortegang, 2) 
+    langegang = shift(langegang, 2) 
+
+    assign_matrix(current_week, kortegang + langegang)    
+
+
+def shift(seq, n):
+    n = n % len(seq)
+    return seq[n:] + seq[:n]
+
+def create_kortegang(startingweek):
+    """recreate the last used order of rooms for the kortegang task (see the matrix)"""
+    x = startingweek.previous_week(3).shifts.all()
+    return [
+        startingweek.previous_week(2).shifts.all().get(task__id=4).room,
+        startingweek.previous_week(1).shifts.all().get(task__id=4).room,
+        startingweek.previous_week(1).shifts.all().get(task__id=2).room,
+        startingweek.previous_week(5).shifts.all().get(task__id=4).room,
+        startingweek.previous_week(3).shifts.all().get(task__id=4).room
+    ]
+
+def create_langegang(startingweek):
+    """recreate the last used order of rooms for the langegang task (see the matrix)"""
+    return [
+        startingweek.previous_week(3).shifts.all().get(task__id=1).room,
+        startingweek.previous_week(2).shifts.all().get(task__id=1).room,
+        startingweek.previous_week(1).shifts.all().get(task__id=1).room,
+        startingweek.previous_week(4).shifts.all().get(task__id=3).room,
+        startingweek.previous_week(3).shifts.all().get(task__id=3).room,
+        startingweek.previous_week(2).shifts.all().get(task__id=3).room,
+        startingweek.previous_week(1).shifts.all().get(task__id=3).room,
+        startingweek.previous_week(3).shifts.all().get(task__id=2).room,
+        startingweek.previous_week(2).shifts.all().get(task__id=2).room
+    ]
+
+def assign_matrix(startingweek, rooms):
+    current_week = startingweek
+    for week in matrix:
+        for task in Task.objects.all():
+            room = rooms[week[task.id-1]-1]
+            shift = Shift(task=task, week=current_week, room=room)
+            shift.save()
+        current_week = current_week.next_week()
+
+

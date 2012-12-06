@@ -18,7 +18,7 @@ def notify_schedule():
 
 def notify_last_week():
 	current_week = Week.get_current_week()
-	prev_week = current_week.previous()
+	prev_week = current_week.previous_week()
 
 	plaintext = get_template('schedule/email_last_week.html')
 	html      = get_template('schedule/email_last_week.html')
@@ -39,7 +39,7 @@ def notify_last_week():
 
 def notify_next_week():
 	current_week = Week.get_current_week()
-	next_week = current_week.next()
+	next_week = current_week.next_week()
 
 	plaintext = get_template('schedule/email_next_week.html')
 	html      = get_template('schedule/email_next_week.html')
