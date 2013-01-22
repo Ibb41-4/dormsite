@@ -1,8 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
+from django.http import HttpResponseRedirect
 
 
 def change_user(request, user_id, redirect_field_name=REDIRECT_FIELD_NAME):

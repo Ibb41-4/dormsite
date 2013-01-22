@@ -20,7 +20,6 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 MANAGERS = ADMINS
 
 
-
 DATABASES = {
     'default': dj_database_url.config(default='sqlite:///%s/database.sqlite3' % PROJECT_DIR)
 }
@@ -202,7 +201,8 @@ AUTHENTICATION_BACKENDS = (
 
 MONTHLY_FEE = 12.50
 
-LOGIN_EXEMPT_URLS = [r'^static/']
+LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
+
 
 #EMAIL_HOST=smtp.surfnet.uu.nl
 

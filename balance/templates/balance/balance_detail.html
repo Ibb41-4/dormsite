@@ -7,11 +7,11 @@
 {% block primary %}
 <p>
 {% if balance.previous.pk %}
-    <a href="{% url 'balance' balance.previous.pk %}">&lt;- Vorige</a> 
+    <a href="{% url 'balance' balance.previous.pk %}">&lt;- Vorige</a>
 {% else %}
     &lt;- Vorige
 {% endif %}
- - <a href="{% url 'balance' %}">Huidige</a> - 
+ - <a href="{% url 'balance' %}">Huidige</a> -
 {% if balance.next.pk %}
     <a href="{% url 'balance' balance.next.pk %}">Volgende -&gt;</a>
 {% else %}
@@ -34,7 +34,7 @@
     {% else %}
         Het begin der tijden
     {% endif %}
-     tot 
+     tot
     {% if balance.next %}
         {{balance.created|date:"DATE_FORMAT"}}
     {% else %}

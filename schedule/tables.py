@@ -1,6 +1,5 @@
 import django_tables2 as tables
-from django_tables2 import A
-from schedule.models import Week
+
 
 class WeeksTable(tables.Table):
     week = tables.DateColumn(verbose_name="Week", accessor="Week")
@@ -19,4 +18,3 @@ class WeeksTable(tables.Table):
         # add class="paleblue" to <table> tag
         attrs = {"class": "paleblue"}
         #sequence = ("startdate", "id", "task1")'''
-

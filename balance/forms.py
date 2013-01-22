@@ -7,21 +7,25 @@ from .models import Drink
 from .models import Dinner
 from .models import Eater
 
+
 class PriceForm(forms.ModelForm):
     price = forms.DecimalField(max_digits=5, decimal_places=2, localize=True)
 
     class Meta:
         localize = True
 
+
 class BillsForm(PriceForm):
 
     class Meta(PriceForm.Meta):
         model = Bill
-      
+
+
 class ExpensesForm(PriceForm):
 
     class Meta(PriceForm.Meta):
         model = Expense
+
 
 class DrinksForm(PriceForm):
     number = forms.IntegerField(max_value=100, min_value=1)
@@ -29,14 +33,15 @@ class DrinksForm(PriceForm):
     class Meta(PriceForm.Meta):
         model = Drink
 
+
 class DinnersForm(PriceForm):
 
     class Meta(PriceForm.Meta):
         model = Dinner
-        exclude = ['number',]
+        exclude = ['number']
 
     def save(self, commit=True):
-        dinner = super(DinnersForm, self).save(commit=False) # Save the child so we have an ID for the m2m
+        dinner = super(DinnersForm, self).save(commit=False)  # Save the child so we have an ID for the m2m
 
         def save_m2m():
             eaters = self.cleaned_data.get('eaters')

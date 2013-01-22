@@ -1,6 +1,5 @@
 from django_ical.views import ICalFeed
 
-from django.contrib.syndication.views import FeedDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
