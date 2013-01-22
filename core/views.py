@@ -1,6 +1,5 @@
 from datetime import date
 
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import simplejson
 
@@ -13,7 +12,7 @@ from balance.models import Balance
 
 class DefaultDetailView(DetailView):
     def get_object(self, queryset=None):
-        try: 
+        try:
             return self.model.objects.filter(preview=False).latest('created')
         except self.model.DoesNotExist:
             return self.model(created=date.today)
@@ -37,7 +36,7 @@ class TabledFormView(ListView, FormView):
         # Add in a QuerySet of all the books
         context['form'] = self.get_form(self.get_form_class())
         return context
-    
+
     def form_valid(self, form):
         if self.request.user.is_authenticated():
             instance = form.save()

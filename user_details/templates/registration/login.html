@@ -8,10 +8,8 @@
 <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
 	{% csrf_token %}
 	{{ form.as_p }}
-	
-	<input type="submit" value="login" />
+
+	<input type="submit" value="login" /> <a href="{% url 'password_reset' %}">Wachtwoord kwijt?</a>
 	<input type="hidden" name="next" value="{{next}}" />
 </form>
-
-<p>Klik <a href="{% url 'iplogin.views.login' %}">hier</a> als dit de huis pc is</p>
 {% endblock %}

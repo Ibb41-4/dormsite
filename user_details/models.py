@@ -1,17 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser
+
 
 class User(AbstractUser):
     #first_name = models.CharField(max_length=50)
-    #last_name = models.CharField(max_length=100)  
-    phonenumber = models.CharField(max_length=20, null=True)
-    emergency_phonenumber = models.CharField(max_length=20, null=True, blank=True)
-    birthdate = models.DateField(null=True,)
-    startdate = models.DateField(null=True,)
-    enddate = models.DateField(null=True, blank=True)
+    #last_name = models.CharField(max_length=100)
+    phonenumber = models.CharField(max_length=20, null=True, verbose_name=u'Telefoon')
+    emergency_phonenumber = models.CharField(max_length=20, null=True, blank=True, verbose_name=u'Noodnummer')
+    birthdate = models.DateField(null=True, verbose_name=u'Geboortedatum')
+    enddate = models.DateTimeField(null=True, blank=True, verbose_name=u'Einddatum')
 
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phonenumber', 'birthdate', 'startdate']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phonenumber', 'birthdate']
 
     def get_full_name(self):
         return str(self.first_name, self.last_name)

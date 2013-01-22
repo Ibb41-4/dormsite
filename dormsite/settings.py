@@ -3,6 +3,8 @@ import djcelery
 import dj_database_url
 import os
 
+import django.conf.global_settings as DEFAULT_SETTINGS
+
 djcelery.setup_loader()
 
 DEBUG = True
@@ -12,7 +14,7 @@ ADMINS = (
      ('Hiram', 'ibb41-4dormsite@hmvp.nl'),
 )
 
-PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../')) 
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 
 
 MANAGERS = ADMINS
@@ -20,7 +22,7 @@ MANAGERS = ADMINS
 
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///'+PROJECT_DIR+'/database.sqlite3')
+    'default': dj_database_url.config(default='sqlite:///%s/database.sqlite3' % PROJECT_DIR)
 }
 
 #DATABASES = {
@@ -101,6 +103,12 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    "iplogin.context_processors.iplogin",
+    'django.core.context_processors.request',
+    # etc...
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -109,6 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'dormsite.middleware.LoginRequiredMiddleware',
     'dormsite.middleware.WhodidMiddleware',
+    'iplogin.middleware.IPLoginMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -131,10 +140,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
     'gunicorn',
     'djcelery',
     'django_tables2',
@@ -145,7 +150,11 @@ INSTALLED_APPS = (
     'balance',
     'iplogin',
     'south',
-    'django.contrib.markup'
+    'django.contrib.markup',
+    # Uncomment the next line to enable the admin:
+    'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -182,20 +191,23 @@ BROKER_BACKEND = 'django'
 AUTH_USER_MODEL = 'user_details.User'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/user/login/'
 IP_AUTH_USER = 'ibby'
 IP_AUTH_IP = ['145.97.206.179', '127.0.0.1']
 
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'iplogin.backend.IPAuthBackend')
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'iplogin.backend.IPAuthBackend',
+)
 
-MONTHLY_FEE=12.50
+MONTHLY_FEE = 12.50
 
-LOGIN_EXEMPT_URLS=[r'^static/']
+LOGIN_EXEMPT_URLS = [r'^static/']
 
 #EMAIL_HOST=smtp.surfnet.uu.nl
 
 #EMAIL_PORT=
 
-EMAIL_USE_TLS=True
+EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

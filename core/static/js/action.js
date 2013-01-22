@@ -35,32 +35,32 @@ $(function(){
                 modal: true,
                 draggable: true,
                 resizable: false,
-                buttons: [ 
-                    { text: "Ok", click: function() { 
+                buttons: [
+                    { text: "Ok", click: function() {
 
-                        $( this ).dialog( "close" ); 
+                        $( this ).dialog( "close" );
                     }},
-                    { text: "Annuleer", click: function() { 
-                        $( this ).dialog( "close" ); 
+                    { text: "Annuleer", click: function() {
+                        $( this ).dialog( "close" );
                     }}
                 ]
             });*/
         }, activeClass: "highlight"
     });
 
-    // bind form and provide a simple callback function 
-    $('.list_form').ajaxForm({ 
-        // dataType identifies the expected content type of the server response 
-        dataType:  'json', 
- 
-        // success identifies the function to invoke when the server response 
-        // has been received 
-        success:   function(data) { 
+    // bind form and provide a simple callback function
+    $('.list_form').ajaxForm({
+        // dataType identifies the expected content type of the server response
+        dataType:  'json',
+
+        // success identifies the function to invoke when the server response
+        // has been received
+        success:   function(data) {
             $('.list_form .empty_table').hide()
-            $('.list_form tbody').append('<tr><td>'+data['payer']+'</td><td>'+data['description']+'</td><td>&euro; '+data['price']+'</td></tr>') 
+            $('.list_form tbody').append('<tr><td>'+data['payer']+'</td><td>'+data['description']+'</td><td>&euro; '+data['price']+'</td></tr>')
         }
     });
-    
+
     $('.list_form select').select2();
     $('.list_form #eaters select').select2({
         width: '350px',
@@ -71,5 +71,9 @@ $(function(){
     $('.list_form #eaters select').on("change", function(e) {
         $('input[type=number]').spinner();
     });
+
+    $('#iplogin').change(function(){
+        document.location.href = '/user/iplogin/' + $(this).val() + '/?next=' + window.location
+    })
 
 })

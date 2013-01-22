@@ -1,25 +1,27 @@
+from django_tables2   import RequestConfig
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
 from django.views.generic.edit import UpdateView
+from django.contrib.auth import get_user_model
 
-
-from user_details.models import User
 from user_details.tables import UsersTable
 
 from .forms import UserForm
 
+
 @login_required
 def index(request):
-    group = Group.objects.get(name="Huisgenoten")
-    users = User.objects.filter(groups=group, is_active=True)
+    users = get_user_model().objects.filter(groups__name="Huisgenoten", is_active=True)
     table = UsersTable(users)
-    return render(request, 'user_details/index.html', {'table': table, 'users':users})# Create your views here.
+    RequestConfig(request).configure(table)
+    return render(request, 'user_details/index.html', {'table': table, 'users': users})
+
 
 class UserView(UpdateView):
     form_class = UserForm
     success_url = '/user/'
-    model = User
+    model = get_user_model()
 
     def get_object(self):
-    	return self.request.user
+        return self.request.user

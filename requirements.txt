@@ -1,5 +1,5 @@
-https://www.djangoproject.com/download/1.5b1/tarball/
-#Django==1.5b1
+https://www.djangoproject.com/download/1.5c1/tarball/
+#Django==1.5c1
 South==0.7.6
 celery==3.0.11
 dj-database-url==0.2.1

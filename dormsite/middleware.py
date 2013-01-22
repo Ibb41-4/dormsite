@@ -11,6 +11,7 @@ EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
 if hasattr(settings, 'LOGIN_EXEMPT_URLS'):
     EXEMPT_URLS += [compile(expr) for expr in settings.LOGIN_EXEMPT_URLS]
 
+
 class LoginRequiredMiddleware:
     """
     Middleware that requires a user to be authenticated to view any page other
@@ -34,13 +35,12 @@ class LoginRequiredMiddleware:
                 return HttpResponseRedirect(settings.LOGIN_URL)
 
 
-
-
 class WhodidMiddleware:
     """
     Add user created_by and modified_by foreign key refs to any model automatically.
-    
-    Almost entirely taken from https://github.com/Atomidata/django-audit-log/blob/master/audit_log/middleware.py
+
+    Almost entirely taken from
+    https://github.com/Atomidata/django-audit-log/blob/master/audit_log/middleware.py
     """
 
     def process_request(self, request):
@@ -51,10 +51,10 @@ class WhodidMiddleware:
                 user = None
 
             mark_whodid = curry(self.mark_whodid, user)
-            signals.pre_save.connect(mark_whodid,  dispatch_uid = (self.__class__, request,), weak = False)
+            signals.pre_save.connect(mark_whodid,  dispatch_uid=(self.__class__, request,), weak=False)
 
     def process_response(self, request, response):
-        signals.pre_save.disconnect(dispatch_uid =  (self.__class__, request,))
+        signals.pre_save.disconnect(dispatch_uid=(self.__class__, request,))
         return response
 
     def mark_whodid(self, user, sender, instance, **kwargs):

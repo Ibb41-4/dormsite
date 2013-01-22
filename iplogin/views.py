@@ -1,20 +1,15 @@
 from django.contrib.auth import authenticate
 from django.contrib import auth
-from django.conf import settings 
-from django.contrib.auth import REDIRECT_FIELD_NAME 
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseForbidden
 
- 
-def login(request, template_name='registration/login.html', redirect_field_name=REDIRECT_FIELD_NAME):
-    user = authenticate(ip=request.META['REMOTE_ADDR'])
+
+def change_user(request, user_id, redirect_field_name=REDIRECT_FIELD_NAME):
+
     redirect_to = request.REQUEST.get(redirect_field_name, '')
+
+    user = authenticate(ip=request.META['REMOTE_ADDR'], user_id=user_id)
     if user is not None:
         auth.login(request, user)
-        
-        if not redirect_to or '//' in redirect_to or ' ' in redirect_to: 
-            redirect_to = settings.LOGIN_REDIRECT_URL
-        return HttpResponseRedirect(redirect_to)
-    else:
-    	return HttpResponseRedirect(reverse('django.contrib.auth.views.login'))
-
+    return HttpResponseRedirect(redirect_to)
