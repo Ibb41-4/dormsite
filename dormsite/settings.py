@@ -203,11 +203,5 @@ MONTHLY_FEE = 12.50
 
 LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
 
-
-#EMAIL_HOST=smtp.surfnet.uu.nl
-
-#EMAIL_PORT=
-
-EMAIL_USE_TLS = True
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'user_details.nosmtp_email_backend.EmailBackend'
+EMAIL_ERROR_ADDRESS = 'ibb414huissiteemailerrors@hmvp.nl'
