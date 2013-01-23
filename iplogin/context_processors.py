@@ -7,7 +7,7 @@ from django.contrib.auth import BACKEND_SESSION_KEY
 def iplogin(request):
     ip = request.META['REMOTE_ADDR']
 
-    backend = request.session[BACKEND_SESSION_KEY] if request.session[BACKEND_SESSION_KEY] else ''
+    backend = request.session[BACKEND_SESSION_KEY] if BACKEND_SESSION_KEY in request.session else ''
 
     if ip in settings.IP_AUTH_IP and backend == "iplogin.backend.IPAuthBackend":
         normal_users = get_user_model().objects.exclude(groups__name="Huisoudste").filter(groups__name="Huisgenoten", is_active=True)
