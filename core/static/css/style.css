@@ -8,7 +8,7 @@ aside {
 	margin: 20px auto;
 	width: 750px;
 	box-shadow: 5px 5px 5px grey;
-	background: url('/static//img/paper.jpg');
+	background: url('../img/paper.jpg');
 	padding: 3em;
 }
 
@@ -24,7 +24,7 @@ footer {
 }
 
 body {
-	background: url('/static/img/wood.jpg');
+	background: url('../img/wood.jpg');
 }
 
 th {
@@ -53,7 +53,7 @@ th {
 	cursor: pointer;
 }
 
-.current_week 
+.current_week
 {
 	line-height: 3em;
 	font-size: 1.2em;
@@ -103,10 +103,102 @@ td {
 .highlight
 {
 	background: rgba(200,200,100,0.2);
-
 }
+
 #switch_dialog
 {
 	display: none;
 
 }
+
+
+table.tables2 {
+    border-collapse: collapse;
+}
+
+table.tables2,
+table.tables2 +  ul.pagination {
+    font-size: 11px;
+}
+
+
+
+table.tables2 td,
+table.tables2 th {
+    padding: 5px;
+    line-height: 13px;
+    text-align: left;
+}
+
+table.tables2 thead th,
+table.tables2 thead td {
+    padding: 2px 5px;
+    vertical-align: middle;
+}
+
+table.tables2 thead th.orderable > a {
+    padding-right: 20px;
+    background: url(../django_tables2/themes/tables2/img/arrow-inactive-up.png) right center no-repeat;
+}
+table.tables2 thead th.orderable.asc > a {
+    background-image: url(../django_tables2/themes/tables2/img/arrow-active-up.png);
+}
+table.tables2 thead th.orderable.desc > a {
+    background-image: url(../django_tables2/themes/tables2/img/arrow-active-down.png);
+}
+
+table.tables2 + ul.pagination {
+    overflow: auto;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
+}
+
+table.tables2 + ul.pagination > li {
+    float: left;
+    line-height: 22px;
+    margin-left: 10px;
+}
+
+table.tables2 + ul.pagination > li:first-child {
+    margin-left: 0;
+}
+
+table.tables2 + ul.pagination > li.cardinality {
+    float: right;
+    color: #8d8d8d;
+}
+
+table.tables2 > tbody > tr > td > span.true,
+table.tables2 > tbody > tr > td > span.false {
+    background-position: top left;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 10px;
+    overflow: hidden;
+    text-indent: -200px;
+    width: 10px;
+}
+
+table.tables2 > tbody > tr > td > .missing {
+    background: transparent url(../django_tables2/themes/tables2/img/missing.png) right center no-repeat;
+    color: #717171;
+    padding-right: 20px;
+}
+
+table.tables2 > tbody > tr > td > .missing:hover {
+    color: #333;
+}
+
+table.tables2 > tbody > tr > td > span.true {
+    background-image: url(../django_tables2/themes/tables2/img/true.gif);
+}
+
+table.tables2 > tbody > tr > td > span.false {
+    background-image: url(../django_tables2/themes/tables2/img/false.gif);
+}
+
+div.table-container {
+    display: inline-block;
+}
+

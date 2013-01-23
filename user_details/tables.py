@@ -19,5 +19,5 @@ class UsersTable(tables.Table):
         model = get_user_model()
         exclude = ('password', 'username', 'is_active', 'is_staff', 'last_login', 'date_joined', 'is_superuser', 'id', 'startdate', 'enddate')
         # add class="paleblue" to <table> tag
-        attrs = {"class": "paleblue"}
+        attrs = {"class": "tables2"}
         #sequence = ("...", 'emergency_phonenumber')

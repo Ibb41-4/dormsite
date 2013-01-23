@@ -2,9 +2,9 @@ $(function(){
 
     $('input:checkbox').change(function()
     {
-        var toggle = $(this).is(':checked') ? 'on' : 'off'
-        $.ajax('/schedule/' + $(this).val() + '/' + toggle + '/')
-    })
+        var toggle = $(this).is(':checked') ? 'on' : 'off';
+        $.ajax('/schedule/' + $(this).val() + '/' + toggle + '/');
+    });
 
     //$('#current_week').replaceWith('</tbody></table><table class="zoomed">' +  + '</table><table><tbody>')
 
@@ -13,10 +13,10 @@ $(function(){
         drop: function( event, ui ) {
             //$("#replace_name").html($(this).html())
 
-            var first = this
-            var id1 = first.id.substring(5)
-            var other = ui.draggable.get(0)
-            var id2 = other.id.substring(5)
+            var first = this;
+            var id1 = first.id.substring(5);
+            var other = ui.draggable.get(0);
+            var id2 = other.id.substring(5);
 
             function swapNodes(a, b) {
                 var aparent= a.parentNode;
@@ -26,8 +26,8 @@ $(function(){
             }
 
             $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {success: function(){
-                swapNodes(first.firstChild, other.firstChild)
-            }})
+                swapNodes(first.firstChild, other.firstChild);
+            }});
             /*
 
             $("#switch_dialog" ).dialog({
@@ -56,8 +56,8 @@ $(function(){
         // success identifies the function to invoke when the server response
         // has been received
         success:   function(data) {
-            $('.list_form .empty_table').hide()
-            $('.list_form tbody').append('<tr><td>'+data['payer']+'</td><td>'+data['description']+'</td><td>&euro; '+data['price']+'</td></tr>')
+            $('.list_form .empty_table').hide();
+            $('.list_form tbody').append('<tr><td>'+data['payer']+'</td><td>'+data['description']+'</td><td>&euro; '+data['price']+'</td></tr>');
         }
     });
 
@@ -65,15 +65,16 @@ $(function(){
     $('.list_form #eaters select').select2({
         width: '350px',
         formatSelection: function(object, container, query){
-            return object.text + ' +  <input name="'+object.id+'_extra" style="width:20px" value="0" min="0" max="50" required="required" type="number" />'
+            return object.text + ' +  <input name="'+object.id+'_extra" style="width:20px" value="0" min="0" max="50" required="required" type="number" />';
         }
     });
     $('.list_form #eaters select').on("change", function(e) {
         $('input[type=number]').spinner();
     });
 
-    $('#iplogin').change(function(){
-        document.location.href = '/user/iplogin/' + $(this).val() + '/?next=' + window.location
-    })
 
-})
+    // relogin when user is changed
+    $('#iplogin').change(function(){
+        window.location.href = '/user/iplogin/' + $(this).val() + '/?next=' + window.location.pathname + window.location.search;
+    });
+});
