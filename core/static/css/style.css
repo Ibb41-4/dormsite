@@ -138,13 +138,13 @@ table.tables2 thead td {
 
 table.tables2 thead th.orderable > a {
     padding-right: 20px;
-    background: url(../django_tables2/themes/tables2/img/arrow-inactive-up.png) right center no-repeat;
+    background: url(../django_tables2/themes/paleblue/img/arrow-inactive-up.png) right center no-repeat;
 }
 table.tables2 thead th.orderable.asc > a {
-    background-image: url(../django_tables2/themes/tables2/img/arrow-active-up.png);
+    background-image: url(../django_tables2/themes/paleblue/img/arrow-active-up.png);
 }
 table.tables2 thead th.orderable.desc > a {
-    background-image: url(../django_tables2/themes/tables2/img/arrow-active-down.png);
+    background-image: url(../django_tables2/themes/paleblue/img/arrow-active-down.png);
 }
 
 table.tables2 + ul.pagination {
@@ -181,7 +181,7 @@ table.tables2 > tbody > tr > td > span.false {
 }
 
 table.tables2 > tbody > tr > td > .missing {
-    background: transparent url(../django_tables2/themes/tables2/img/missing.png) right center no-repeat;
+    background: transparent url(../django_tables2/themes/paleblue/img/missing.png) right center no-repeat;
     color: #717171;
     padding-right: 20px;
 }
@@ -191,11 +191,11 @@ table.tables2 > tbody > tr > td > .missing:hover {
 }
 
 table.tables2 > tbody > tr > td > span.true {
-    background-image: url(../django_tables2/themes/tables2/img/true.gif);
+    background-image: url(../django_tables2/themes/paleblue/img/true.gif);
 }
 
 table.tables2 > tbody > tr > td > span.false {
-    background-image: url(../django_tables2/themes/tables2/img/false.gif);
+    background-image: url(../django_tables2/themes/paleblue/img/false.gif);
 }
 
 div.table-container {
