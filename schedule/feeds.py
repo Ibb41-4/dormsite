@@ -19,7 +19,7 @@ class ShiftFeed(ICalFeed):
         return get_object_or_404(User, pk=user_pk)
 
     def items(self, item):
-        return Shift.objects.filter(room__user=item)
+        return Shift.objects.filter(room=item.current_room())
 
     def item_title(self, item):
         return item.task
