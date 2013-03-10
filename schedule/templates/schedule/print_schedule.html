@@ -22,7 +22,7 @@
 			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
 
 			{% for shift in week.shifts.all %}
-				<td>{{shift.room}}</td>
+				<td>{{shift.room.current_user}}</td>
 			{% endfor %}
 		</tr>
 	{% endfor %}

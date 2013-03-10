@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import UpdateView
 from django.contrib.auth import get_user_model
 
-from user_details.tables import UsersTable
+from residents.tables import UsersTable
 
 from .forms import UserForm
 
@@ -15,7 +15,14 @@ def index(request):
     users = get_user_model().objects.filter(groups__name="Huisgenoten", is_active=True)
     table = UsersTable(users)
     RequestConfig(request).configure(table)
-    return render(request, 'user_details/index.html', {'table': table, 'users': users})
+    return render(request, 'residents/index.html', {'table': table, 'users': users})
+
+@login_required
+def old_residents(request):
+    users = get_user_model().objects.filter(is_active=False)
+    table = UsersTable(users)
+    RequestConfig(request).configure(table)
+    return render(request, 'residents/old_residents.html', {'table': table, 'users': users})
 
 
 class UserView(UpdateView):

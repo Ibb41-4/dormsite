@@ -61,6 +61,7 @@ $(function(){
         }
     });
 
+    //functions for eating list
     $('.list_form select').select2();
     $('.list_form #eaters select').select2({
         width: '350px',

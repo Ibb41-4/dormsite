@@ -1,0 +1,34 @@
+[
+{
+  "fields": {
+    "description": "*Doe gezellig samen de schoonmaakbeurt of maak duidelijke afspraken wie welk deel doet!*\r\n\r\n*   Het opruimen van de huiskamertafels\r\n*   Het schoonmaken (= stofzuigen + dweilen) van kamer- en keukenvloer\r\n*   Het wassen en ophangen van de theedoeken\r\n*   Het grondig reinigen van aanrecht, vensterbank en fornuizen\r\n*   Het wegbrengen van oud glas en papier uit de kamer naar de glas- en papierbak (Glas- en papierbak staan naast de Spar. Eventueel staat de steekwagen in de kast.)", 
+    "name": "Keukenbeurt"
+  }, 
+  "model": "schedule.task", 
+  "pk": 1
+},
+{
+  "fields": {
+    "description": "", 
+    "name": "Keukenbeurt"
+  }, 
+  "model": "schedule.task", 
+  "pk": 2
+},
+{
+  "fields": {
+    "description": "*   Het schoonmaken van de vloer in de gang\r\n*   Het schoonmaken van toilet, toiletvloer en wasbakje in desbetreffende gang Het legen van het toiletvuilnisbakje\r\n*   Het schoonmaken van de badkamer (douche, wastafels, spiegels en plankjes) Het schoonmaken van badkamervloer\r\n*   Het legen van de badkamervuilniszak", 
+    "name": "Lange gang"
+  }, 
+  "model": "schedule.task", 
+  "pk": 3
+},
+{
+  "fields": {
+    "description": "", 
+    "name": "Korte gang"
+  }, 
+  "model": "schedule.task", 
+  "pk": 4
+}
+]

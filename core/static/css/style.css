@@ -6,31 +6,38 @@ aside {
 
 #primary {
 	margin: 20px auto;
-	width: 750px;
+	width: 800px;
 	box-shadow: 5px 5px 5px grey;
 	background: url('../img/paper.jpg');
 	padding: 3em;
+	z-index: 10;
+	position: relative;
 }
 
 #login {
-	width: 700px;
+	width: 800px;
 	margin: 20px auto;
 	text-align: right;
 }
 
-footer {
+footer, header {
 	margin: 30px auto;
-	width: 700px;
+	width: 800px;
 }
 
 body {
 	background: url('../img/wood.jpg');
 }
 
+table
+{
+	margin: 0 auto;
+}
+
 th {
 	border: solid rgba(0,0,0,0.2) 1px;
 	background: rgba(200,200,100,0.2);
-	opacity: 50%;
+	opacity: 50;
 	padding: 1px 5px;
 	color: #0088CC;
 }
@@ -42,7 +49,7 @@ th {
 }
 
 .past_week {
-	color: darkgrey;
+	color: #A9A9A9;
 }
 
 .future_week span {
@@ -61,23 +68,25 @@ th {
 	position: relative;
 	float: right;
 	left: -25px;
-	margin: -1px -500px -1px 0px;
-	box-shadow: 5px 5px 5px grey;
+	margin: -1px -620px -1px 0px;
+	box-shadow: 5px 5px 5px #808080;
 	cursor: pointer;
 }
 
 .current_week td {
 	display: table-cell;
+	border: 2px solid #808080;
 	border: 2px solid rgba(0,0,0,0.5);
-	width: 110px;
+	width: 140px;
 
 }
 
 td {
 	padding: 1px 5px;
 	text-align: right;
+	border: solid rgb(0,0,0) 1px;
 	border: solid rgba(0,0,0,0.2) 1px;
-	width: 100px;
+	width: 130px;
 }
 
 .list_form textarea, .list_form select[multiple=multiple] {
@@ -91,18 +100,21 @@ td {
 
 .list_form tfoot {
 	padding: 1em;
-	vertical-align: center;
+	vertical-align: middle;
+	border: dashed rgb(0,0,0) 2px;
 	border: dashed rgba(0,0,0,0.2) 2px;
 }
 
 .list_form tfoot td {
+	border: dashed rgb(0,0,0) 2px;
 	border: dashed rgba(0,0,0,0.2) 2px;
 
 }
 
 .highlight
 {
-	background: rgba(200,200,100,0.2);
+	background: rgb(200, 200, 100);
+	background: rgba(200, 200, 100, 0.2);
 }
 
 #switch_dialog
@@ -198,7 +210,36 @@ table.tables2 > tbody > tr > td > span.false {
     background-image: url(../django_tables2/themes/paleblue/img/false.gif);
 }
 
-div.table-container {
+.table-container {
     display: inline-block;
 }
 
+nav
+{
+	margin: -20px auto;
+	width: 800px;
+	padding: 0 3em;
+}
+
+nav ul {
+	padding: 0;
+	margin: 0 -3em;
+
+}
+
+nav li {
+	display: inline-block;
+	padding: 3px 1em;
+	background: url('../img/paper.jpg');
+	box-shadow: 5px 5px 5px #808080;
+	border-bottom: dotted 2px #808080;
+}
+
+nav .active {
+	border-bottom: solid 2px #f0f0f0;
+	border-top: solid 2px #f0f0f0;
+}
+
+.hidden {
+	display: none;
+}

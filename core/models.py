@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 
+from django.contrib.sites.models import Site
+
 
 class TrackableModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -12,13 +14,8 @@ class TrackableModel(models.Model):
         get_latest_by = 'created'
         abstract = True
 
-"""
-class Settings(model.Model):
+
+class Setting(models.Model):
     site = models.OneToOneField(Site)
-    monthly_fee =
-    bankaccount =
-    email =
-    facebook =
-    last_fm =
-    address =
-"""
+    name = models.CharField(max_length=20)
+    value = models.CharField(max_length=200)

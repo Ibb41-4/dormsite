@@ -2,20 +2,19 @@ from datetime import date, datetime, timedelta
 from math import floor
 
 from django.db import models
-from django.conf import settings 
 
+#from residents.models import Room
 
-# Create your models here.
 
 class Week(models.Model):
-    WEEKS = map(lambda x: (x,'Week %s' % x), range(1,54))
+    WEEKS = map(lambda x: (x, 'Week %s' % x), range(1, 54))
     CURRENT = "current_week"
     FUTURE = "future_week"
     PAST = "past_week"
 
     number = models.PositiveIntegerField(choices=WEEKS)
     year = models.PositiveIntegerField(default=date.today().year)
-    
+
     @property
     def startdate(self):
         return tofirstdayinisoweek(self.year, self.number)
@@ -65,7 +64,7 @@ class Week(models.Model):
     def get_weeks(self, number):
         weeks = [self]
         if number > 0:
-            for i in range(0, number-1):
+            for i in range(0, number - 1):
                 weeks.append(weeks[-1].next_week())
         else:
             for i in range(number, 0):
@@ -80,9 +79,9 @@ class Week(models.Model):
         current_week, created = Week.objects.get_or_create(number=current_week_number, year=current_year)
         return current_week
 
-
     def __unicode__(self):
         return 'Week {0} beginnend op: {1}'.format(self.number, self.startdate.date().isoformat())
+
 
 class Task(models.Model):
     name = models.CharField(max_length=200)
@@ -90,25 +89,11 @@ class Task(models.Model):
 
     def __unicode__(self):
         return self.name
-    
-class Room(models.Model):
-    number = models.PositiveIntegerField()
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="room")
-    tasks = models.ManyToManyField(Task, related_name="rooms")
 
-    def __unicode__(self):
-        if not self.user == None:    
-            return unicode(self.user)
-        else:
-            return 'Kamer %s' % self.number
-
-    class Meta:
-        ordering = ['number']
-            
 
 class Shift(models.Model):
     week = models.ForeignKey(Week, related_name="shifts")
-    room = models.ForeignKey(Room, related_name="shifts")
+    room = models.ForeignKey('residents.Room', related_name="shifts")
     task = models.ForeignKey(Task, related_name="shifts")
     done = models.BooleanField()
 
@@ -123,17 +108,16 @@ class Shift(models.Model):
         unique_together = ('week', 'task',)
 
 
-
-
 def tofirstdayinisoweek(year, week):
     ret = datetime.strptime('%04d-%02d-1' % (year, week), '%Y-%W-%w')
     if date(year, 1, 4).isoweekday() > 4:
         ret -= timedelta(days=7)
     return ret
 
+
 def is_long_year(year):
     '''
     iso years can be 53 weeks long: http://www.staff.science.uu.nl/~gent0113/calendar/isocalendar.htm
     '''
-    p = lambda y: y + floor(y/4) - floor(y/100) + floor(y/400)
-    return (p(year) % 7 == 4) or (p(year-1) % 7 == 3)
+    p = lambda y: y + floor(y / 4) - floor(y / 100) + floor(y / 400)
+    return (p(year) % 7 == 4) or (p(year - 1) % 7 == 3)

@@ -4,10 +4,10 @@ from decimal import Decimal
 from django.db import models
 from django.db.models.signals import post_init
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 
 from core.models import TrackableModel
-from user_details.models import User
 
 
 class Balance(TrackableModel):
@@ -21,17 +21,17 @@ class Balance(TrackableModel):
             return cls(created=datetime.now())
 
     @property
-    def previous(self):
+    def previous_balance(self):
         if not self.pk:
             return None
 
         try:
             return self.get_previous_by_created(preview=False)
-        except self.model.DoesNotExist:
-            return self.model(created=datetime.now())
+        except self.__class__.DoesNotExist:
+            return self.__class__(created=datetime.now())
 
     @property
-    def next(self):
+    def next_balance(self):
         if not self.pk:
             return None
 
@@ -45,7 +45,7 @@ class Balance(TrackableModel):
         if cls != Balance or not instance.preview or not instance.pk:
             return
 
-        previous_balance = instance.previous
+        previous_balance = instance.previous_balance
 
         new_balance = instance
         new_balance.created = datetime.now()
@@ -56,7 +56,7 @@ class Balance(TrackableModel):
         drinks = Drink.objects.filter(created__gt=previous_balance.created)
         bills = Bill.objects.filter(created__gt=previous_balance.created)
 
-        for user in User.objects.all():
+        for user in get_user_model().objects.all():
 
             #get previous total (0 if none exists)
             try:
@@ -68,7 +68,7 @@ class Balance(TrackableModel):
             today = date.today()
             if not user.startdate or (user.startdate > today
                 or (user.enddate
-                    and user.enddate < previous_balance.created
+                    and user.enddate < previous_balance.created.date()
                     and previous_total == 0)):
                 continue
 

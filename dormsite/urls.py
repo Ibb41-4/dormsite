@@ -9,9 +9,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'user_details.views.index', name='home'),
+    url(r'^$', 'residents.views.index', name='home'),
     url(r'^schedule/', include('schedule.urls')),
-    url(r'^user/', include('user_details.urls')),
+    url(r'^user/', include('residents.urls')),
     url(r'^balance/', include('balance.urls')),
 
     url(r'^expenses/', ExpensesView.as_view(), name='expenses'),

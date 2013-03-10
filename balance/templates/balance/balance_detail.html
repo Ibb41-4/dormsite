@@ -6,14 +6,14 @@
 
 {% block primary %}
 <p>
-{% if balance.previous.pk %}
-    <a href="{% url 'balance' balance.previous.pk %}">&lt;- Vorige</a>
+{% if balance.previous_balance.pk %}
+    <a href="{% url 'balance' balance.previous_balance.pk %}">&lt;- Vorige</a>
 {% else %}
     &lt;- Vorige
 {% endif %}
  - <a href="{% url 'balance' %}">Huidige</a> -
-{% if balance.next.pk %}
-    <a href="{% url 'balance' balance.next.pk %}">Volgende -&gt;</a>
+{% if balance.next_balance.pk %}
+    <a href="{% url 'balance' balance.next_balance.pk %}">Volgende -&gt;</a>
 {% else %}
     Volgende -&gt;
 {% endif %}
@@ -29,13 +29,13 @@
 <table>
 <caption>
     Afrekening voor de periode
-    {% if balance.previous.pk %}
-        {{balance.previous.created|date:"DATE_FORMAT"}}
+    {% if balance.previous_balance.pk %}
+        {{balance.previous_balance.created|date:"DATE_FORMAT"}}
     {% else %}
         Het begin der tijden
     {% endif %}
      tot
-    {% if balance.next %}
+    {% if balance.next_balance %}
         {{balance.created|date:"DATE_FORMAT"}}
     {% else %}
         Vandaag

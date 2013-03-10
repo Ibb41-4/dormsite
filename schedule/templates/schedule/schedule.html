@@ -23,10 +23,10 @@
 
 			{% for shift in week.shifts.all %}
 				<td>
-					<span id="shift{{shift.pk}}">{{shift.room}}</span>
+					<span id="shift{{shift.pk}}">{{shift.room.current_user}}</span>
 					{% if week.type != 'future_week' %}
-						<input type="checkbox" name="shift_done" value="{{shift.pk}}" 
-							{% if shift.done %}checked="checked"{% endif %} 
+						<input type="checkbox" name="shift_done" value="{{shift.pk}}"
+							{% if shift.done %}checked="checked"{% endif %}
 							{% if week.type == 'past_week' %}disabled="disabled"{% endif %}>
 					{% endif %}
 				</td>

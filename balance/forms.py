@@ -1,5 +1,5 @@
 from django import forms
-from user_details.models import User
+from residents.models import User
 
 from .models import Bill
 from .models import Expense

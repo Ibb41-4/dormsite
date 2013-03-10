@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load render_table from django_tables2 %}
+
+{% block pagetitle %}Oud huisgenoten{% endblock %}
+
+{% block title %}Oud huisgenoten{% endblock %}
+
+{% block primary %}
+{% render_table table %}
+
+<p>Email alle oud huisgenoten: <a href="mailto:
+	{% for user in users %}
+		{% if user.email %}
+			{{user.first_name}} {{user.last_name}} <{{user.email}}>;
+		{% endif %}
+	{% endfor %}
+">Klik hier</a></p>
+{% endblock %}

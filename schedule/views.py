@@ -1,19 +1,12 @@
-from random import shuffle
-
-from django_tables2 import A
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import permission_required
-from django.forms.models import model_to_dict
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 
 
-from schedule.models import Week, Room, Task, Shift
-from schedule.tables import WeeksTable
-
-from dormsite.decorators import class_view_decorator
+from schedule.models import Week, Task, Shift
 
 
 def toggle(request, pk, toggle):
@@ -22,22 +15,25 @@ def toggle(request, pk, toggle):
     shift.save()
     return HttpResponse('')
 
+
 @permission_required('schedule.view_shifts')
 def schedule(request):
     start_week = Week.get_current_week().previous_week(7)
 
     weeks = start_week.get_weeks(35)
-    
+
     for week in weeks:
         assign_weeks(week)
 
     return render(request, 'schedule/schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
+
 
 @permission_required('schedule.view_shifts')
 def print_schedule(request):
     current_week = Week.get_current_week()
     weeks = current_week.get_weeks(21)
     return render(request, 'schedule/print_schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
+
 
 @permission_required('schedule.view_shifts')
 def switch_shifts(request, id1, id2):
@@ -61,7 +57,6 @@ def switch_shifts(request, id1, id2):
     if shift1.week == shift2.week:
         return HttpResponseForbidden("week")
 
-
     #only modify if two different rooms
     if shift1.room == shift2.room:
         return HttpResponseForbidden("same")
@@ -78,10 +73,10 @@ def switch_shifts(request, id1, id2):
 
 def email_switch_shift(shift1, shift2):
     plaintext = get_template('schedule/email_switch_shift.html')
-    html      = get_template('schedule/email_switch_shift.html')
-    subject   = get_template('schedule/email_switch_shift_subject.txt')
+    html = get_template('schedule/email_switch_shift.html')
+    subject = get_template('schedule/email_switch_shift_subject.txt')
 
-    d = Context({ 'shift1': shift1, 'shift2': shift2 })
+    d = Context({'shift1': shift1, 'shift2': shift2})
 
     from_email, to = 'no-reply@huissite.hmvp.nl', [shift1.room.user.email, shift2.room.user.email]
     subject_content = subject.render(d)
@@ -92,11 +87,22 @@ def email_switch_shift(shift1, shift2):
     msg.send()
 
 '''
-Matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
-7 weeks and 4 tasks, in proper order (position 4 is kortegang etc)
+Templete matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
+n weeks and 4 tasks, in proper order (position 4 is kortegang etc)
+Every n weeks this template is used with the numbers representing rooms, but each time the rooms shift by one
+Also adjust create_kortegang and  create_langegang
 '''
 
-matrix = [[4,9,6,1],[5,10,7,2],[13,14,8,4],[12,11,9,3],[6,13,10,5],[7,14,11,1],[8,3,12,2]]
+matrix = [
+    [14, 6 , 7 , 1],
+    [13, 8 , 9 , 4],
+    [5 , 12, 11, 2],
+    [10, 6 , 13, 3],
+    [4 , 14, 12, 5],
+    [2 , 7 , 8 , 1],
+    [11, 9 , 10, 3],
+]
+
 
 def assign_weeks(startingweek):
     if startingweek.is_filled:
@@ -105,56 +111,55 @@ def assign_weeks(startingweek):
     if startingweek.previous_week().is_filled:
         kortegang = create_kortegang(startingweek)
         langegang = create_langegang(startingweek)
-    else:
-        kortegang = list(Task.objects.get(pk=4).rooms.all()) #korte gang
-        langegang = list(Task.objects.get(pk=3).rooms.all()) #lange gang
-    
+    else:  # only needed the first time
+        kortegang = list(Task.objects.get(pk=4).rooms.all())  # korte gang
+        langegang = list(Task.objects.get(pk=3).rooms.all())  # lange gang
+
     current_week = startingweek
 
-
     # make sure they dont get the same order as last set
-    kortegang = shift(kortegang, 2) 
-    langegang = shift(langegang, 2) 
+    kortegang = shift(kortegang, 1)
+    langegang = shift(langegang, 1)
 
-    assign_matrix(current_week, kortegang + langegang)    
+    assign_matrix(current_week, kortegang + langegang)
 
 
 def shift(seq, n):
     n = n % len(seq)
     return seq[-n:] + seq[:-n]
 
+
 def create_kortegang(startingweek):
     """recreate the last used order of rooms for the kortegang task (see the matrix)"""
-    x = startingweek.previous_week(3).shifts.all()
     return [
-        startingweek.previous_week(2).shifts.all().get(task__id=4).room,
-        startingweek.previous_week(1).shifts.all().get(task__id=4).room,
-        startingweek.previous_week(1).shifts.all().get(task__id=2).room,
-        startingweek.previous_week(5).shifts.all().get(task__id=4).room,
-        startingweek.previous_week(3).shifts.all().get(task__id=4).room
+        startingweek.previous_week(2).shifts.all().get(task__id=4).room,  # 1
+        startingweek.previous_week(2).shifts.all().get(task__id=1).room,  # 2
+        startingweek.previous_week(1).shifts.all().get(task__id=4).room,  # 3
+        startingweek.previous_week(3).shifts.all().get(task__id=1).room,  # 4
+        startingweek.previous_week(3).shifts.all().get(task__id=4).room   # 5
     ]
+
 
 def create_langegang(startingweek):
     """recreate the last used order of rooms for the langegang task (see the matrix)"""
     return [
-        startingweek.previous_week(3).shifts.all().get(task__id=1).room,
-        startingweek.previous_week(2).shifts.all().get(task__id=1).room,
-        startingweek.previous_week(1).shifts.all().get(task__id=1).room,
-        startingweek.previous_week(4).shifts.all().get(task__id=3).room,
-        startingweek.previous_week(3).shifts.all().get(task__id=3).room,
-        startingweek.previous_week(2).shifts.all().get(task__id=3).room,
-        startingweek.previous_week(1).shifts.all().get(task__id=3).room,
-        startingweek.previous_week(3).shifts.all().get(task__id=2).room,
-        startingweek.previous_week(2).shifts.all().get(task__id=2).room
+        startingweek.previous_week(4).shifts.all().get(task__id=2).room,  # 6
+        startingweek.previous_week(2).shifts.all().get(task__id=2).room,  # 7
+        startingweek.previous_week(2).shifts.all().get(task__id=3).room,  # 8
+        startingweek.previous_week(1).shifts.all().get(task__id=2).room,  # 9
+        startingweek.previous_week(1).shifts.all().get(task__id=3).room,  # 10
+        startingweek.previous_week(1).shifts.all().get(task__id=1).room,  # 11
+        startingweek.previous_week(3).shifts.all().get(task__id=3).room,  # 12
+        startingweek.previous_week(4).shifts.all().get(task__id=3).room,  # 13
+        startingweek.previous_week(3).shifts.all().get(task__id=2).room   # 14
     ]
+
 
 def assign_matrix(startingweek, rooms):
     current_week = startingweek
     for week in matrix:
         for task in Task.objects.all():
-            room = rooms[week[task.id-1]-1]
+            room = rooms[week[task.id - 1] - 1]
             shift = Shift(task=task, week=current_week, room=room)
             shift.save()
         current_week = current_week.next_week()
-
-

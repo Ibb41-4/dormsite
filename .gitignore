@@ -34,3 +34,5 @@ celerybeat-schedule
 
 *.sqlite3
 celery.db
+
+core/templates/base.html

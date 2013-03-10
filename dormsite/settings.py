@@ -7,11 +7,17 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 
 djcelery.setup_loader()
 
-DEBUG = True
+
+def bool_env(val):
+    """Replaces string based environment values with Python booleans"""
+    return True if os.environ.get(val, False) == 'True' else False
+
+
+DEBUG = bool_env('DEBUG')
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-     ('Hiram', 'ibb41-4dormsite@hmvp.nl'),
+    ('Hiram', 'ibb41-4dormsite@hmvp.nl'),
 )
 
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
@@ -89,7 +95,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -99,7 +105,7 @@ SECRET_KEY = 'z04+))6)ivy#-b!k5)hafo28!#5*$b5(8v)glex1re=tz9kv3='
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
@@ -145,7 +151,7 @@ INSTALLED_APPS = (
     'kombu.transport.django',
     'core',
     'schedule',
-    'user_details',
+    'residents',
     'balance',
     'iplogin',
     'south',
@@ -187,12 +193,12 @@ LOGGING = {
 
 BROKER_BACKEND = 'django'
 
-AUTH_USER_MODEL = 'user_details.User'
+AUTH_USER_MODEL = 'residents.User'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/user/login/'
 IP_AUTH_USER = 'ibby'
-IP_AUTH_IP = ['145.97.206.179', '127.0.0.1']
+IP_AUTH_IP = [os.environ.get('IPLOGIN_IP'), '127.0.0.1']
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -203,5 +209,11 @@ MONTHLY_FEE = 12.50
 
 LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
 
-EMAIL_BACKEND = 'user_details.nosmtp_email_backend.EmailBackend'
-EMAIL_ERROR_ADDRESS = 'ibb414huissiteemailerrors@hmvp.nl'
+# email settings
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
+EMAIL_ERROR_ADDRESS = os.environ.get('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')

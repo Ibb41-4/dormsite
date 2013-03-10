@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import permission_required
 
 
 from core.views import TabledFormView
-from user_details.models import User
+from residents.models import User
 
 from .models import Balance
 from .models import Bill, Dinner, Expense, Drink

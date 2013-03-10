@@ -18,8 +18,12 @@ class IPLoginMiddleware:
             return
 
         ip = request.META['REMOTE_ADDR']
-        user = get_user_model().objects.exclude(groups__name="Huisoudste").filter(groups__name="Huisgenoten", is_active=True)[0]
 
-        if ip in settings.IP_AUTH_IP:
-            user = authenticate(ip=ip, user_id=user.id)
-            login(request, user)
+        users = get_user_model().objects.exclude(groups__name="Huisoudste").filter(groups__name="Huisgenoten", is_active=True)
+
+        if users.exists():
+            user = users[0]  # just pick the first one
+
+            if ip in settings.IP_AUTH_IP:
+                user = authenticate(ip=ip, user_id=user.id)
+                login(request, user)

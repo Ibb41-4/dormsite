@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
 from .models import Shift
-from user_details.models import User
+from residents.models import User
 
 
 class ShiftFeed(ICalFeed):

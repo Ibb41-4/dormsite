@@ -12,9 +12,8 @@ urlpatterns = patterns('',
     # url(r'^$', 'dormsite.views.home', name='home'),
     # url(r'^dormsite/', include('dormsite.foo.urls')),
 
-    url(r'^$', ListView.as_view(
-        queryset=get_user_model().objects.filter(groups__name="Huisgenoten", is_active=True)
-    )),
+    url(r'^$', 'residents.views.index', name='home'),
+    url(r'^old$', 'residents.views.old_residents', name='old'),
     url(r'^edit/$', UserView.as_view(), name='edit'),
     url(r'^iplogin/(?P<user_id>\d+)/$', 'iplogin.views.change_user'),
     url(r'^login/$',  'django.contrib.auth.views.login'),
