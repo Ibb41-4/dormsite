@@ -99,7 +99,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'z04+))6)ivy#-b!k5)hafo28!#5*$b5(8v)glex1re=tz9kv3='
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -191,6 +191,8 @@ LOGGING = {
     }
 }
 
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST')]
+
 BROKER_BACKEND = 'django'
 
 AUTH_USER_MODEL = 'residents.User'
@@ -205,6 +207,8 @@ AUTHENTICATION_BACKENDS = (
     'iplogin.backend.IPAuthBackend',
 )
 
+MONTH_DAY_FORMAT = "j F"
+
 MONTHLY_FEE = 12.50
 
 LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
@@ -217,3 +221,4 @@ EMAIL_HOST_USER = os.environ.get('DEFAULT_FROM_EMAIL')
 EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 EMAIL_ERROR_ADDRESS = os.environ.get('DEFAULT_FROM_EMAIL')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_SUBJECT_PREFIX = '[Dormsite] '
