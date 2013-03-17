@@ -41,7 +41,7 @@ def switch_shifts(request, id1, id2):
     shift2 = Shift.objects.get(pk=id2)
 
     #only modify your own shifts, unless you have rights
-    if not request.user == shift1.room.user and not request.user == shift2.room.user:
+    if not request.user == shift1.room.current_user() and not request.user == shift2.room.current_user():
         if not request.user.has_perm('shift.can_switch_others'):
             return HttpResponseForbidden("own")
 
@@ -78,7 +78,7 @@ def email_switch_shift(shift1, shift2):
 
     d = Context({'shift1': shift1, 'shift2': shift2})
 
-    from_email, to = 'no-reply@huissite.hmvp.nl', [shift1.room.user.email, shift2.room.user.email]
+    from_email, to = 'no-reply@huissite.hmvp.nl', [shift1.room.current_user().email, shift2.room.current_user().email]
     subject_content = subject.render(d)
     text_content = plaintext.render(d)
     html_content = html.render(d)
