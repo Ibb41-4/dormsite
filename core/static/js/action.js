@@ -25,9 +25,15 @@ $(function(){
                 aparent.insertBefore(b, asibling);
             }
 
-            $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {success: function(){
-                swapNodes(first.firstChild, other.firstChild);
-            }});
+            $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {
+                success: function(text){
+                    swapNodes(first.firstChild, other.firstChild);
+                    alert(text);
+                },
+                error: function(a,b,text){
+                    alert(text);
+                }
+            });
             /*
 
             $("#switch_dialog" ).dialog({

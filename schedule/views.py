@@ -47,19 +47,19 @@ def switch_shifts(request, id1, id2):
 
     #only modify shifts so that the right person is doing the right tasks
     if not shift1.task in shift2.room.tasks.all() or not shift2.task in shift1.room.tasks.all():
-        return HttpResponseForbidden("tasks")
+        return HttpResponseForbidden("De taak is voor één van de kamers niet beschikbaar")
 
     #only modify current or future shifts
     if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
-        return HttpResponseForbidden("past")
+        return HttpResponseForbidden("Je kan geen taken in het verleden wisselen.")
 
     #only modify from different weeks
     if shift1.week == shift2.week:
-        return HttpResponseForbidden("week")
+        return HttpResponseForbidden("Je kan niet binnen de zelfde week wisselen.")
 
     #only modify if two different rooms
     if shift1.room == shift2.room:
-        return HttpResponseForbidden("same")
+        return HttpResponseForbidden("Je wisselt met dezelfde kamer, dat heeft natuurlijk geen zin.")
 
     #everything is fine, proceed
     shift1.room, shift2.room = shift2.room, shift1.room
@@ -68,7 +68,7 @@ def switch_shifts(request, id1, id2):
 
     email_switch_shift(shift1, shift2)
 
-    return HttpResponse('true')
+    return HttpResponse('De taken van {0} en {1} zijn omgewisseld'.format(shift1.room.current_user(), shift2.room.current_user()))
 
 
 def email_switch_shift(shift1, shift2):
