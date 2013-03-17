@@ -30,8 +30,8 @@ $(function(){
                     swapNodes(first.firstChild, other.firstChild);
                     alert(text);
                 },
-                error: function(a,b,text){
-                    alert(text);
+                error: function(jqXHR){
+                    alert(jqXHR.responseText);
                 }
             });
             /*
