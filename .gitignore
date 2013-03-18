@@ -36,3 +36,7 @@ celerybeat-schedule
 celery.db
 
 core/templates/base.html
+client_credentials.json
+client_secrets.json
+staticfiles
+.DS_Store

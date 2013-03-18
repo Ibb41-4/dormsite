@@ -12,3 +12,4 @@ psycopg2==2.4.5
 python-dateutil==1.5
 Markdown==2.2.1
 dnspython==1.10.0
+google-api-python-client==1.1

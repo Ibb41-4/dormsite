@@ -81,7 +81,7 @@ STATIC_ROOT = PROJECT_DIR + '/staticfiles'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'https://googledrive.com/host/0B5K79dR3ug0ucGx6d29qSTlQek0/'
+STATIC_URL = 'https://googledrive.com/host/0B5K79dR3ug0uRDRXV1lDb1FBVkU/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'balance',
     'iplogin',
     'south',
+    'storages',
     'django.contrib.markup',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -198,6 +199,7 @@ BROKER_BACKEND = 'django'
 AUTH_USER_MODEL = 'residents.User'
 
 LOGIN_REDIRECT_URL = '/'
+
 LOGIN_URL = '/user/login/'
 IP_AUTH_USER = 'ibby'
 IP_AUTH_IP = [os.environ.get('IPLOGIN_IP'), '127.0.0.1']
@@ -222,3 +224,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 EMAIL_ERROR_ADDRESS = os.environ.get('DEFAULT_FROM_EMAIL')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 EMAIL_SUBJECT_PREFIX = '[Dormsite] '
+
+STATICFILES_STORAGE = 'storages.backends.google_drive.GoogleDriveStorage'
+GDRIVE_CLIENTSECRETS_LOCATION = PROJECT_DIR + '/client_secrets.json'
+GDRIVE_CREDENTIALS_FILE = PROJECT_DIR + '/client_credentials.json'
+GDRIVE_ROOT_FOLDER_NAME = 'staticfiles'
