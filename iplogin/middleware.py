@@ -19,7 +19,7 @@ class IPLoginMiddleware:
 
         ip = request.META['REMOTE_ADDR']
 
-        users = get_user_model().objects.exclude(groups__name="Huisoudste").filter(groups__name="Huisgenoten", is_active=True)
+        users = get_user_model().residents_without_elder.all()
 
         if users.exists():
             user = users[0]  # just pick the first one

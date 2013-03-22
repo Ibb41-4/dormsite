@@ -1,7 +1,5 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
-
-from django.contrib.auth import BACKEND_SESSION_KEY
+from django.contrib.auth import get_user_model, BACKEND_SESSION_KEY
 
 
 def iplogin(request):
@@ -9,8 +7,9 @@ def iplogin(request):
 
     backend = request.session[BACKEND_SESSION_KEY] if BACKEND_SESSION_KEY in request.session else ''
 
+    #only respond when iplogin is possible and the backend is enabled
     if ip in settings.IP_AUTH_IP and backend == "iplogin.backend.IPAuthBackend":
-        normal_users = get_user_model().objects.exclude(groups__name="Huisoudste").filter(groups__name="Huisgenoten", is_active=True)
+        normal_users = get_user_model().residents_without_elder.all()
         return {'iplogin': True, 'users': normal_users}
 
     return {}

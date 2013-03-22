@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 def change_user(request, user_id, redirect_field_name=REDIRECT_FIELD_NAME):
 
     redirect_to = request.REQUEST.get(redirect_field_name, '')
-    print redirect_to
     if redirect_to == reverse('django.contrib.auth.views.login'):
         redirect_to = '/'
 

@@ -1,4 +1,4 @@
-from django_tables2   import RequestConfig
+from django_tables2 import RequestConfig
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -12,10 +12,11 @@ from .forms import UserForm
 
 @login_required
 def index(request):
-    users = get_user_model().objects.filter(groups__name="Huisgenoten", is_active=True)
+    users = get_user_model().residents.all()
     table = UsersTable(users)
     RequestConfig(request).configure(table)
     return render(request, 'residents/index.html', {'table': table, 'users': users})
+
 
 @login_required
 def old_residents(request):

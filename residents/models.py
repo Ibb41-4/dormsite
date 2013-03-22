@@ -1,7 +1,17 @@
 from datetime import date
 
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
+
+
+class ResidentsManager(UserManager):
+    def get_query_set(self):
+        return super(ResidentsManager, self).get_query_set().filter(groups__name="Huisgenoten", is_active=True).exclude(groups__name="Huisoudste")
+
+
+class ResidentsWithElderManager(UserManager):
+    def get_query_set(self):
+        return super(ResidentsWithElderManager, self).get_query_set().filter(groups__name="Huisgenoten", is_active=True)
 
 
 class User(AbstractUser):
@@ -10,6 +20,9 @@ class User(AbstractUser):
     phonenumber = models.CharField(max_length=20, null=True, verbose_name=u'Telefoon')
     emergency_phonenumber = models.CharField(max_length=20, null=True, blank=True, verbose_name=u'Noodnummer')
     birthdate = models.DateField(null=True, verbose_name=u'Geboortedatum')
+
+    residents_without_elder = ResidentsManager()
+    residents = ResidentsWithElderManager()
 
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phonenumber', 'birthdate']
     USERNAME_FIELD = 'username'

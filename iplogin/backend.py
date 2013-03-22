@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 
 
 class IPAuthBackend:
@@ -14,13 +13,11 @@ class IPAuthBackend:
 
     """
     def authenticate(self, ip=None, user_id=None):
-        print ip
-        print settings.IP_AUTH_IP
         if ip in settings.IP_AUTH_IP:
-            return get_object_or_404(
-                get_user_model(),
-                groups__name="Huisgenoten", pk=user_id, is_active=True
-                )
+            try:
+                return get_user_model().residents.get(pk=user_id)
+            except get_user_model().DoesNotExist:
+                return None
         return None
 
     def get_user(self, user_id):
