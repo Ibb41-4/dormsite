@@ -5,8 +5,6 @@ aside {
 }
 
 #primary {
-	margin: 20px auto;
-	width: 800px;
 	box-shadow: 5px 5px 5px grey;
 	background: url('../img/paper.jpg');
 	padding: 3em;
@@ -14,15 +12,13 @@ aside {
 	position: relative;
 }
 
-#login {
-	width: 800px;
-	margin: 20px auto;
+header {
 	text-align: right;
+    padding-top: 30px;
 }
 
-footer, header {
-	margin: 30px auto;
-	width: 800px;
+footer {
+	padding: 30px;
 }
 
 body {
@@ -68,7 +64,7 @@ th {
 	position: relative;
 	float: right;
 	left: -25px;
-	margin: -1px -620px -1px 0px;
+	margin: -1px -620px -1px 0;
 	box-shadow: 5px 5px 5px #808080;
 	cursor: pointer;
 }
@@ -216,8 +212,6 @@ table.tables2 > tbody > tr > td > span.false {
 
 nav
 {
-	margin: -20px auto;
-	width: 800px;
 	padding: 0 3em;
 }
 
@@ -229,17 +223,15 @@ nav ul {
 
 nav li {
 	display: inline-block;
-	padding: 3px 1em;
+    margin:0;
+	padding: 0.5em 1em;
 	background: url('../img/paper.jpg');
 	box-shadow: 5px 5px 5px #808080;
 	border-bottom: dotted 2px #808080;
+    border-radius: 1px;
 }
 
 nav .active {
 	border-bottom: solid 2px #f0f0f0;
 	border-top: solid 2px #f0f0f0;
-}
-
-.hidden {
-	display: none;
 }

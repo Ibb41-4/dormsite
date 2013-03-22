@@ -38,19 +38,31 @@
 
 <p><a href="{% url 'schedule.views.print_schedule' %}">Print dit rooster.</a> <a href="{% url 'ical_schedule' user.pk %}">Importeer dit in een kalenderdapplicatie.</a></p>
 
-{% for task in tasks %}
-	{% if task.description %}
-		<div>
-			<h4>{{task.name}}</h4>
-			<p>{{task.description|markdown}}</p>
-		</div>
-	{% endif %}
-{% endfor %}
+<dl>
+	{% for task in tasks %}
+		{% if task.description %}
+			<dt>{{task.name}}</dt>
+			<dd>{{task.description|markdown}}</dd>
+		{% endif %}
+	{% endfor %}
+</dl>
+
 
 <p>
 	<b>Zet op deze lijst een kruisje achter je naam zodra je je beurt hebt gedaan, zodat iedereen kan zien hoe goed je bezig bent!</b>
 </p>
 
-<div id="switch_dialog" title="Let op!">Weet je zeker dat je wilt wisselen met <span id="replace_name">naam</span></div>
+<div class="modal hide fade" id="confirm-switch">
+    <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" data-target="#confirm-switch" aria-hidden="true">&times;</button>
+	    <h3>Let op!</h3>
+	</div>
+	<div class="modal-body">
+	    <p>Weet je zeker dat je wilt wisselen met <span id="replace_name">naam</span></p>
+	</div>
+	<div class="modal-footer">
+	     <button class="btn" data-dismiss="modal" data-target="#confirm-switch"  aria-hidden="true">Close</button>
+    </div>
+</div>
 
 {% endblock %}
