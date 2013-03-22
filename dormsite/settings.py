@@ -111,7 +111,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     "iplogin.context_processors.iplogin",
     'django.core.context_processors.request',
-    # etc...
+    'core.context_processors.site'
 )
 
 MIDDLEWARE_CLASSES = (

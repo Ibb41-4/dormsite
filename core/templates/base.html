@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!--
+{% load active %}
+-->
+<html lang="nl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
+        <title>{%block pagetitle %}{% endblock %} - {{ SITE_NAME }}</title>
+        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" />
+        <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" />
+        <link href="{{ STATIC_URL }}css/select2.css" rel="stylesheet" />
+        <link href="{{ STATIC_URL }}css/jquery-ui-theme/jquery-ui-1.9.0.custom.min.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div id="login">
+                    {% if iplogin %}
+                        Kies een gebruiker:
+                        <select id="iplogin">
+                            {% for user in users %}
+                                <option value="{{user.id}}" {% if user == request.user%}selected="selected"{%endif%}>{{user}}</option>
+                            {% endfor %}
+                        </select>
+                        of <a href="{% url 'django.contrib.auth.views.login' as login%}{{login}}">log in.</a>
+                    {% elif user.is_authenticated %}
+                        Je bent ingelogd als {{ user.first_name }}. <a href="{% url 'django.contrib.auth.views.logout' %}?next=/">Uitloggen</a>
+                    {% else %}
+                        Je bent niet ingelogd. <a href="{% url 'django.contrib.auth.views.login' as login%}{{login}}">Inloggen</a>
+                    {% endif %}
+
+                </div>
+            </header>
+
+            {% if perms.schedule.view_shifts or perms.balance.view_balance or perms.balance.add_expense or perms.balance.add_dinner or perms.balance.add_drink or perms.balance.add_bill or user.is_staff %}
+            <nav>
+                <ul>
+                    <li class="hidden"><a href="#primary">Sla menu over</a></li>
+                    <li class="{% if request.path == '/' %}active{% endif%}">
+                        <a href="/">Thuis</a>
+                    </li>
+                    {% if perms.schedule.view_shifts %}
+                        <li class="{% active request 'schedule' %}">
+                            <a href="{% url 'schedule' %}">Schoonmaak Rooster</a>
+                        </li>
+                    {% endif %}
+                    {% if perms.balance.view_balance %}
+                        <li class="{% active request 'balance' %}">
+                            <a href="{% url 'balance' %}">Huisrekening</a>
+                        </li>
+                    {% endif %}
+                    {% if perms.balance.add_expense %}
+                        <li class="{% active request 'expenses' %}">
+                            <a href="{% url 'expenses' %}">Uitgaven</a>
+                        </li>
+                    {% endif %}
+                    {% if perms.balance.add_dinner %}
+                        <li class="{% active request 'dinners' %}">
+                            <a href="{% url 'dinners' %}">Eetlijst</a>
+                        </li>
+                    {% endif %}
+                    {% if perms.balance.add_drink %}
+                        <li class="{% active request 'drinks' %}">
+                            <a href="{% url 'drinks' %}">Bierlijst</a>
+                        </li>
+                    {% endif %}
+                    {% if perms.balance.add_bill %}
+                        <li class="{% active request 'bills' %}">
+                            <a href="{% url 'bills' %}">Betaald aan Huisrekening</a>
+                        </li>
+                    {% endif %}
+                    <!--<li><a href="/stats/">Statistieken</a></li>-->
+                    {% if user.is_staff %}
+                        <li>
+                            <a href="/admin/">Admin</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            <div id="primary">
+                <h1>{% block title %}{% endblock %}</h1>
+                {% block primary %}{% endblock %}
+            </div>
+            <footer>
+                {% include "footer.html" %}
+            </footer>
+        </div>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/action.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.9.0.custom.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+    </body>
+</html>
