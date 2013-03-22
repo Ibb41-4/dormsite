@@ -81,7 +81,7 @@ STATIC_ROOT = PROJECT_DIR + '/staticfiles'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'https://googledrive.com/host/0B5K79dR3ug0uRDRXV1lDb1FBVkU/'
+STATIC_URL = 'https://googledrive.com/host/0B5K79dR3ug0uRDRXV1lDb1FBVkU/' if not DEBUG else '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -156,6 +156,7 @@ INSTALLED_APPS = (
     'iplogin',
     'south',
     'storages',
+    'crispy_forms',
     'django.contrib.markup',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
@@ -229,3 +230,6 @@ STATICFILES_STORAGE = 'storages.backends.google_drive.GoogleDriveStorage'
 GDRIVE_CLIENTSECRETS_LOCATION = PROJECT_DIR + '/client_secrets.json'
 GDRIVE_CREDENTIALS_FILE = PROJECT_DIR + '/client_credentials.json'
 GDRIVE_ROOT_FOLDER_NAME = 'staticfiles'
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap'
