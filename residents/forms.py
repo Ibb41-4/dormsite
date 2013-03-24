@@ -8,17 +8,33 @@ from django.forms.formsets import formset_factory
 from django.forms.formsets import BaseFormSet
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, HTML, Div, Field
-from crispy_forms.bootstrap import FormActions, AppendedText, StrictButton
+from crispy_forms.layout import Layout, Fieldset, HTML, Div
+from crispy_forms.bootstrap import FormActions, StrictButton
 
 from .models import User, Room, RoomAssignment
 
 
 class UserForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.helper = FormHelper()
+        self.helper.html5_required = True
+        self.helper.form_action = '/'
+        self.helper.layout = Layout(
+            'first_name',
+            'last_name',
+            'email',
+            'birthdate',
+            'phonenumber',
+            'emergency_phonenumber',
+            FormActions(
+                StrictButton('Opslaan', type='submit', css_class='btn btn-primary')
+            )
+        )
+
+        super(UserForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = get_user_model()
-        fields = ('first_name', 'last_name', 'email', 'birthdate', 'phonenumber', 'emergency_phonenumber')
 
 
 class UserChangeForm(UserChangeFormOriginal):
@@ -44,7 +60,7 @@ class UserCreationForm(UserCreationFormOriginal):
 
 class UserMoveForm(forms.ModelForm):
     date = forms.DateField(input_formats=['%d-%m-%Y', '%d-%m-%y', '%d%m%Y', '%d%m%y'], label='Datum', help_text='De datum waarop de nieuwe huisgenoot officieel hier komt wonen')
-    goer = forms.ModelChoiceField(queryset=User.residents.all(), empty_label=None, label='Vertrekkende huisgenoot')
+    goer = forms.ModelChoiceField(queryset=User.residents.all(), label='Vertrekkende huisgenoot')
 
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()

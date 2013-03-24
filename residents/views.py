@@ -52,6 +52,9 @@ class UserMoveView(CreateView):
 
             #do change residents
             goer = form.cleaned_data['goer']
+            if not goer:
+                return self.render_to_response(self.get_context_data(form=form, non_form_errors=room_formset.non_form_errors()))
+
             startdate = form.cleaned_data['date']
 
             #check for each room the new assignment

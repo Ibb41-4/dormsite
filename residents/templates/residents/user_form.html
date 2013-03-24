@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
 {% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
 
 {% block pagetitle %}Wijzig je gegevens{% endblock %}
 
 {% block title %}Wijzig je gegevens{% endblock %}
 
 {% block primary %}
-<form action="" method="post">{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="Opslaan" />
-</form>
-
+{% crispy form %}
 {% endblock %}
