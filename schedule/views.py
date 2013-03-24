@@ -23,7 +23,9 @@ def toggle(request, pk, toggle):
 def schedule(request):
     start_week = Week.get_current_week().previous_week(7)
 
-    weeks = start_week.get_weeks(35)
+    weeks = start_week.get_weeks(42)
+    weeks = weeks[:35]  # don't show the last 7, this way we generate them but don't show them.
+                        # This helps preventing that switching changes the overall structure
 
     for week in weeks:
         assign_weeks(week)
