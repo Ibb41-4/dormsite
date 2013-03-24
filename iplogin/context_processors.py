@@ -10,6 +10,7 @@ def iplogin(request):
     #only respond when iplogin is possible and the backend is enabled
     if ip in settings.IP_AUTH_IP and backend == "iplogin.backend.IPAuthBackend":
         normal_users = get_user_model().residents_without_elder.all()
-        return {'iplogin': True, 'users': normal_users}
+
+        return {'iplogin': True, 'iplogin_users': normal_users}
 
     return {}

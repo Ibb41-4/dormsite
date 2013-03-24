@@ -2,16 +2,21 @@ from datetime import date
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.conf import settings
 
 
 class ResidentsManager(UserManager):
     def get_query_set(self):
-        return super(ResidentsManager, self).get_query_set().filter(groups__name="Huisgenoten", is_active=True).exclude(groups__name="Huisoudste")
+        queryset = super(ResidentsManager, self).get_query_set()
+
+        # hack to filter on is_active, lets hope the total of users stays small enough
+        q_ids = [o.id for o in queryset if o.is_resident()]
+        return queryset.filter(id__in=q_ids)
 
 
-class ResidentsWithElderManager(UserManager):
+class ResidentsWithoutElderManager(ResidentsManager):
     def get_query_set(self):
-        return super(ResidentsWithElderManager, self).get_query_set().filter(groups__name="Huisgenoten", is_active=True)
+        return super(ResidentsWithoutElderManager, self).get_query_set().exclude(groups__name=settings.ELDER_GROUP_NAME)
 
 
 class User(AbstractUser):
@@ -21,8 +26,9 @@ class User(AbstractUser):
     emergency_phonenumber = models.CharField(max_length=20, null=True, blank=True, verbose_name=u'Noodnummer')
     birthdate = models.DateField(null=True, verbose_name=u'Geboortedatum')
 
-    residents_without_elder = ResidentsManager()
-    residents = ResidentsWithElderManager()
+    objects = UserManager()
+    residents_without_elder = ResidentsWithoutElderManager()
+    residents = ResidentsManager()
 
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'phonenumber', 'birthdate']
     USERNAME_FIELD = 'username'
@@ -31,7 +37,7 @@ class User(AbstractUser):
         return str(self.first_name, self.last_name)
 
     def get_short_name(self):
-        return self.first_name
+        return self.first_name if self.first_name else self.username
 
     @property
     def startdate(self):
@@ -42,37 +48,44 @@ class User(AbstractUser):
 
     @property
     def enddate(self):
-        if not self.roomassignments.exists():
-            return None
-
-        last_used_assignment = self.roomassignments.all().latest()
-        last_used_room = last_used_assignment.room
-        if last_used_room.current_user() == self:
-            return None
-        else:
-            return last_used_assignment.next_in_line.start_date
+        if self.roomassignments.exists():
+            last_used_assignment = self.roomassignments.all().latest()
+            last_used_room = last_used_assignment.room
+            if last_used_room.current_user() != self:
+                return last_used_assignment.next_in_line.start_date
 
     def last_room(self, check_date=None):
         _date = check_date or date.today()
 
-        if not self.roomassignments.exists():
-            return None
-
-        try:
-            return self.roomassignments.all().filter(start_date__lte=_date).latest().room
-        except Room.DoesNotExist:
-            return None
+        if self.roomassignments.exists():
+            try:
+                rooms = self.roomassignments.all().filter(start_date__lte=_date)
+                if rooms.exists():
+                    return rooms.latest().room
+            except Room.DoesNotExist:
+                pass
 
     def current_room(self, check_date=None):
-        if self.last_room(check_date) is None:
-            return None
-
         last_room = self.last_room(check_date)
-        if last_room.current_user(check_date) == self:
+        if last_room and last_room.current_user(check_date) == self:
             return last_room
+
+    @property
+    def is_active(self):
+        '''Override is_active, to use is_resident but let superusers always be active'''
+        return self.is_resident() or self.is_superuser
+
+    @is_active.setter
+    def is_active(self, ignored):
+        pass  # we ignore this
 
     def is_resident(self, check_date=None):
         return bool(self.current_room(check_date))
+    is_resident.boolean = True  # let django admin use boolean icons
+
+    def is_elder(self):
+        return self.groups.filter(name=settings.ELDER_GROUP_NAME).exists()
+    is_elder.boolean = True  # let django admin use boolean icons
 
     def __unicode__(self):
         return self.get_short_name()
@@ -93,10 +106,12 @@ class Room(models.Model):
         _date = check_date or date.today()
 
         if not self.roomassignments.exists():
-            return None
+            return None  # this should not happen
 
         try:
-            return self.roomassignments.all().filter(start_date__lte=_date).order_by('-start_date')[0].user
+            ra = self.roomassignments.all().filter(start_date__lte=_date).order_by('-start_date')
+            if ra.exists():
+                return ra[0].user
         except User.DoesNotExist:
             return None
 

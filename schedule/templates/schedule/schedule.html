@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load markup %}
+{% load current_user %}
 
 {% block pagetitle %}Schoonmaak rooster{% endblock %}
 
@@ -23,7 +24,7 @@
 
 			{% for shift in week.shifts.all %}
 				<td>
-					<span id="shift{{shift.pk}}">{{shift.room.current_user}}</span>
+					<span id="shift{{shift.pk}}">{{shift.room|current_user:week.startdate}}</span>
 					{% if week.type != 'future_week' %}
 						<input type="checkbox" name="shift_done" value="{{shift.pk}}"
 							{% if shift.done %}checked="checked"{% endif %}

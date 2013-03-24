@@ -1,6 +1,8 @@
 {% extends "print_base.html" %}
 
 {% load markup %}
+{% load current_user %}
+
 
 {% block pagetitle %}Schoonmaak rooster{% endblock %}
 
@@ -22,7 +24,7 @@
 			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
 
 			{% for shift in week.shifts.all %}
-				<td>{{shift.room.current_user}}</td>
+				<td>{{shift.room|current_user:week.startdate}}</td>
 			{% endfor %}
 		</tr>
 	{% endfor %}

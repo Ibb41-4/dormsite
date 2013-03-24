@@ -214,6 +214,9 @@ MONTH_DAY_FORMAT = "j F"
 
 MONTHLY_FEE = 12.50
 
+RESIDENTS_GROUP_NAME = 'Huisgenoten'
+ELDER_GROUP_NAME = 'Huisoudste'
+
 LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
 
 # email settings
@@ -226,10 +229,11 @@ EMAIL_ERROR_ADDRESS = os.environ.get('DEFAULT_FROM_EMAIL')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 EMAIL_SUBJECT_PREFIX = '[Dormsite] '
 
-STATICFILES_STORAGE = 'storages.backends.google_drive.GoogleDriveStorage'
+STATICFILES_STORAGE = 'storages.backends.google_drive.GoogleDriveStorage' if not DEBUG else DEFAULT_SETTINGS.STATICFILES_STORAGE
 GDRIVE_CLIENTSECRETS_LOCATION = PROJECT_DIR + '/client_secrets.json'
 GDRIVE_CREDENTIALS_FILE = PROJECT_DIR + '/client_credentials.json'
 GDRIVE_ROOT_FOLDER_NAME = 'staticfiles'
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap'
+CRISPY_FAIL_SILENTLY = not DEBUG

@@ -1,5 +1,4 @@
 from django import forms
-from residents.models import User
 
 from .models import Bill
 from .models import Expense
@@ -47,12 +46,6 @@ class DinnersForm(PriceForm):
             eaters = self.cleaned_data.get('eaters')
             for eater in eaters:
                 extra = self.data.get(str(eater.id) + "_extra")
-                print dinner
-                print eater
-                print extra
-                print self.cleaned_data
-                print str(eater.id) + "_extra"
-                print self.data
 
                 Eater.objects.create(dinner=dinner, user=eater, extra=extra)
 

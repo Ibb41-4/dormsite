@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block pagetitle %}Inloggen{% endblock %}
 
 {% block title %}Inloggen{% endblock %}
@@ -7,7 +9,7 @@
 {% block primary %}
 <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
 	{% csrf_token %}
-	{{ form.as_p }}
+	{{ form|crispy }}
 
 	<button type="submit" class="btn btn-primary">Login</button>
     <a href="{% url 'password_reset' %}">Wachtwoord kwijt?</a>

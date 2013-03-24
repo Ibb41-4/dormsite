@@ -8,17 +8,25 @@
 
 {% block primary %}
 {% render_table table %}
+<p class="muted"><i class="icon-star"></i> Huisoudste</p>
 
-<p><a href="{% url 'edit' %}">Pas je gegevens aan</a></p>
+<ul class="inline">
+    <li><a href="{% url 'edit' %}">Pas je gegevens aan</a></li>
+    <li><a href="mailto:
+    	{% for user in users %}
+    		{% if user.email %}
+    			{{user.first_name}} {{user.last_name}} <{{user.email}}>;
+    		{% endif %}
+    	{% endfor %}
+    ">Email alle huisgenoten</a></li>
+    <li><a href="{% url 'old' %}">Oudhuisgenoten</a></li>
+    {% if perms.schedule.add_user %}
+        <li><a href="{% url 'move' %}">Voeg een nieuwe huisgenoot toe</a></li>
+    {% endif %}
+    {% if user.is_elder or user.is_superuser%}
+        <li><a href="{% url 'abdicate' %}">Maak iemand anders huisoudste</a></li>
+    {% endif %}
+</ul>
 
-<p>Email alle huisgenoten: <a href="mailto:
-	{% for user in users %}
-		{% if user.email %}
-			{{user.first_name}} {{user.last_name}} <{{user.email}}>;
-		{% endif %}
-	{% endfor %}
-">Klik hier</a></p>
-
-<p><a href="{% url 'old' %}">Oudhuisgenoten</a></p>
 
 {% endblock %}

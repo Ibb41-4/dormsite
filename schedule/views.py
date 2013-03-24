@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
@@ -89,14 +90,14 @@ def email_switch_shift(shift1, shift2):
     msg.send()
 
 '''
-Templete matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
+Template matrix to do assignment, nrs 1-5 represent kortegang task, nrs 6-14 langegangtask
 n weeks and 4 tasks, in proper order (position 4 is kortegang etc)
 Every n weeks this template is used with the numbers representing rooms, but each time the rooms shift by one
 Also adjust create_kortegang and  create_langegang
 '''
 
 matrix = [
-    [14, 6 , 7 , 1],
+    [14, 7 , 6 , 1],
     [13, 8 , 9 , 4],
     [5 , 12, 11, 2],
     [10, 6 , 13, 3],
@@ -116,6 +117,9 @@ def assign_weeks(startingweek):
     else:  # only needed the first time
         kortegang = list(Task.objects.get(pk=4).rooms.all())  # korte gang
         langegang = list(Task.objects.get(pk=3).rooms.all())  # lange gang
+        random.shuffle(kortegang)
+        random.shuffle(langegang)
+
 
     current_week = startingweek
 

@@ -235,3 +235,16 @@ nav .active {
 	border-bottom: solid 2px #f0f0f0;
 	border-top: solid 2px #f0f0f0;
 }
+
+.move_room > div {
+    padding: 0.7em 1.3em;
+}
+
+.move_user label{
+    margin-bottom:0;
+}
+
+.move_room {
+    width: 400px;
+    height: 3em;
+}

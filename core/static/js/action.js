@@ -84,4 +84,40 @@ $(function(){
     $('#iplogin').change(function(){
         window.location.href = '/user/iplogin/' + $(this).val() + '/?next=' + window.location.pathname + window.location.search;
     });
+
+    $('#div_id_goer').hide();
+    $('#div_id_goer select').attr('disabled', 'disabled');
+    $('.move_room .control-group').hide();
+    $('.move_room').each(function(index, item) {
+        goer = $('#div_id_goer option:selected').val();
+        selected = $('option:selected', item);
+        selected_string = goer == selected.val() ? 'checked="checked"' : '';
+        $('.move_user', item).append(
+            '<label class="radio"><input type="radio" ' +
+            selected_string +
+            ' name="goer" value="' +
+            selected.val() +
+            '"/><i class="icon-lock"></i>' +
+            selected.text() +
+            '</label>'
+        );
+    });
+    $('.move_user').draggable({revert: true, revertDuration: 0, snap: true, snapModeType: 'inner', snapTolerance: '10', stack: ".move_user"}).disableSelection();
+    $( ".move_room" ).droppable({
+        drop: function(event, ui) {
+            source = ui.draggable.parents('.move_room').first();
+            target = $(this);
+
+            dragged = ui.draggable;
+            replaced = $('.ui-draggable', this);
+
+            // Switch html
+            source.append(replaced);
+            target.append(dragged);
+
+            //set selects
+            $('select', source).val($('input', replaced).val());
+            $('select', target).val($('input', dragged).val());
+        }
+    });
 });

@@ -1,4 +1,5 @@
 import django_tables2 as tables
+from django_tables2 import A
 
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
@@ -17,13 +18,18 @@ class EmailColumn(tables.EmailColumn):
 
 
 class UsersTable(tables.Table):
+    first_name = tables.Column(empty_values=[])
     email = EmailColumn(verbose_name="E-mailadres")
     room = tables.Column(verbose_name="Kamer", accessor="current_room.number")
     startdate = tables.DateColumn(verbose_name="Startdatum", accessor="startdate", orderable=False)
 
-
-    def format_email(self, value):
-        return
+    def render_first_name(self, record):
+        '''
+        Show at least the username when Firstname is empty
+        Also show elders
+        '''
+        elder_string = '<i class="icon-star"></i> ' if record.is_elder() else ''
+        return mark_safe(elder_string + record.get_short_name())
 
     class Meta:
         model = get_user_model()
