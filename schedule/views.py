@@ -55,7 +55,8 @@ def switch_shifts(request, id1, id2):
         return HttpResponseForbidden("De taak is voor één van de kamers niet beschikbaar")
 
     #only modify current or future shifts
-    if shift1.week.type == Week.PAST or shift2.week.type == Week.PAST:
+    if (shift1.week.type == Week.PAST or shift2.week.type == Week.PAST) \
+            and not request.user.has_perm('shift.can_switch_others'):
         return HttpResponseForbidden("Je kan geen taken in het verleden wisselen.")
 
     #only modify from different weeks

@@ -19,7 +19,8 @@
 </thead>
 <tbody>
 	{% for week in data %}
-		<tr class="{{week.type}} {% if week.type != 'past_week' %}switchable{% endif %}">
+		<tr class="{{week.type}} {% if week.type != 'past_week' or perms.schedule.can_switch_others
+				%}switchable{% endif %}">
 			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
 
 			{% for shift in week.shifts.all %}
