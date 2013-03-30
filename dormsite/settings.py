@@ -220,6 +220,8 @@ ELDER_GROUP_NAME = 'Huisoudste'
 LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password']
 
 # email settings
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
