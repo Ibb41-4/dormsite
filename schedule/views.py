@@ -60,7 +60,8 @@ def switch_shifts(request, id1, id2):
         return HttpResponseForbidden("Je kan geen taken in het verleden wisselen.")
 
     #only modify from different weeks
-    if shift1.week == shift2.week:
+    if shift1.week == shift2.week\
+            and not request.user.has_perm('schedule.can_switch_others'):
         return HttpResponseForbidden("Je kan niet binnen de zelfde week wisselen.")
 
     #only modify if two different rooms
