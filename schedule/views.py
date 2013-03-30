@@ -47,8 +47,8 @@ def switch_shifts(request, id1, id2):
 
     #only modify your own shifts, unless you have rights
     if not request.user == shift1.room.current_user() and not request.user == shift2.room.current_user():
-        if not request.user.has_perm('shift.can_switch_others'):
-            return HttpResponseForbidden("own")
+        if not request.user.has_perm('schedule.can_switch_others'):
+            return HttpResponseForbidden("Je kan alleen je eigen dienst ruilen, vraag de huisoudste als je andere diensten wilt ruilen")
 
     #only modify shifts so that the right person is doing the right tasks
     if not shift1.task in shift2.room.tasks.all() or not shift2.task in shift1.room.tasks.all():
@@ -56,7 +56,7 @@ def switch_shifts(request, id1, id2):
 
     #only modify current or future shifts
     if (shift1.week.type == Week.PAST or shift2.week.type == Week.PAST) \
-            and not request.user.has_perm('shift.can_switch_others'):
+            and not request.user.has_perm('schedule.can_switch_others'):
         return HttpResponseForbidden("Je kan geen taken in het verleden wisselen.")
 
     #only modify from different weeks
