@@ -12,7 +12,7 @@
 <thead>
 	<tr>
 		<th>Week</th>
-		{% for task in tasks %}
+		{% for task in tasks|dictsort:"id" %}
 			<th>{{task.name}}</th>
 		{% endfor %}
 	</tr>
@@ -21,8 +21,7 @@
 	{% for week in data %}
 		<tr class="{{week.type}} {% if week.type != 'past_week' or perms.schedule.can_switch_others %}switchable{% endif %}">
 			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
-
-			{% for shift in week.shifts.all %}
+			{% for shift in week.shifts.all|dictsort:"task.id" %}
 				<td>
 					<span id="shift{{shift.pk}}">{{shift.room|current_user:week.startdate}}</span>
 					{% if week.type != 'future_week' %}

@@ -38,6 +38,9 @@ class Week(models.Model):
         return len(self.tasks) > 0
 
     def previous_week(self, number=1):
+        if number < 1:
+            return self
+
         number = self.number - number
         year = self.year
         year_length = 53 if is_long_year(self.year) else 52
@@ -50,6 +53,9 @@ class Week(models.Model):
         return week
 
     def next_week(self, number=1):
+        if number < 1:
+            return self
+
         number = self.number + number
         year = self.year
         year_length = 53 if is_long_year(self.year) else 52
@@ -81,6 +87,7 @@ class Week(models.Model):
 
     def __unicode__(self):
         return 'Week {0} beginnend op: {1}'.format(self.number, self.startdate.date().isoformat())
+
 
 
 class Task(models.Model):

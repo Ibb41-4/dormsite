@@ -112,8 +112,9 @@ matrix = [
 
 
 def assign_weeks(startingweek):
-    if startingweek.is_filled:
-        return
+    for i in range(0, len(matrix)-1):
+        if startingweek.next_week(i).is_filled:
+            return
 
     if startingweek.previous_week().is_filled:
         kortegang = create_kortegang(startingweek)
@@ -123,7 +124,6 @@ def assign_weeks(startingweek):
         langegang = list(Task.objects.get(pk=3).rooms.all())  # lange gang
         random.shuffle(kortegang)
         random.shuffle(langegang)
-
 
     current_week = startingweek
 
