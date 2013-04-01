@@ -217,7 +217,7 @@ MONTHLY_FEE = 12.50
 RESIDENTS_GROUP_NAME = 'Huisgenoten'
 ELDER_GROUP_NAME = 'Huisoudste'
 
-LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password', r'^schedule/ical']
+LOGIN_EXEMPT_URLS = [r'^static/', r'^user/password', r'^schedule/ical', r'^schedule/cron']
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
