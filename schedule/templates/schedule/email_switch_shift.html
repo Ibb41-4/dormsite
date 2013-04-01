@@ -5,13 +5,13 @@
         <meta charset="UTF-8">
     </head>
     <body>
-      	<p>Hoi {{shift1.room.current_user.first_name}} en {{shift2.room.current_user.first_name}},</p>
+        <p>Hoi {{shift1_user.first_name}} en {{shift2_user.first_name}},</p>
 
-        <p>Iemand heeft jullie beurt geruild. Klopt dit niet? Verander het <a href="http://huissite.hmvp.nl/schedule/">hier</a> dan even terug!</p>
+        <p>Iemand heeft jullie beurt geruild. Klopt dit niet? Verander het <a href="http://{{domain}}{% url 'schedule.views.schedule' %}">hier</a> dan even terug!</p>
 
         <p>Het gaat om de volgende beurten: <br />
-        	De {{shift1.task}} van {{shift1.week.startdate|date}};<br />
-        	De {{shift2.task}} van {{shift2.week.startdate|date}};
+            De {{shift1.task}} van {{shift1.week.startdate|date}};<br />
+            De {{shift2.task}} van {{shift2.week.startdate|date}};
         </p>
     </body>
 </html>

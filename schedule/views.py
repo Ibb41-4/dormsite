@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import permission_required
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
-
+from django.contrib.sites.models import Site
 
 from schedule.models import Week, Task, Shift
 
@@ -46,8 +46,11 @@ def switch_shifts(request, id1, id2):
     shift1 = Shift.objects.get(pk=id1)
     shift2 = Shift.objects.get(pk=id2)
 
+    shift1_user = shift1.room.current_user(shift1.week.startdate)
+    shift2_user = shift2.room.current_user(shift2.week.startdate)
+
     #only modify your own shifts, unless you have rights
-    if not request.user == shift1.room.current_user() and not request.user == shift2.room.current_user():
+    if not request.user == shift1_user and not request.user == shift2_user:
         if not request.user.has_perm('schedule.can_switch_others'):
             return HttpResponseForbidden("Je kan alleen je eigen dienst ruilen, vraag de huisoudste als je andere diensten wilt ruilen")
 
@@ -74,23 +77,26 @@ def switch_shifts(request, id1, id2):
     shift1.save()
     shift2.save()
 
-    email_switch_shift(shift1, shift2)
+    email_switch_shift(shift1, shift2, shift1_user, shift2_user)
 
-    return HttpResponse('De taken van {0} en {1} zijn omgewisseld'.format(shift1.room.current_user(), shift2.room.current_user()))
+    return HttpResponse('De taken van {0} en {1} zijn omgewisseld'.format(shift1_user, shift2_user))
 
 
-def email_switch_shift(shift1, shift2):
-    plaintext = get_template('schedule/email_switch_shift.html')
+def email_switch_shift(shift1, shift2, shift1_user, shift2_user):
+    plaintext = get_template('schedule/email_switch_shift.txt')
     html = get_template('schedule/email_switch_shift.html')
     subject = get_template('schedule/email_switch_shift_subject.txt')
 
-    d = Context({'shift1': shift1, 'shift2': shift2})
+    current_site = Site.objects.get_current()
+    domain = current_site.domain
 
-    from_email, to = 'no-reply@huissite.hmvp.nl', [shift1.room.current_user().email, shift2.room.current_user().email]
+    d = Context({'shift1': shift1, 'shift2': shift2, 'shift1_user': shift1_user, 'shift2_user': shift2_user, 'domain': domain})
+
+    to = [shift1_user.email, shift2_user.email]
     subject_content = subject.render(d)
     text_content = plaintext.render(d)
     html_content = html.render(d)
-    msg = EmailMultiAlternatives(subject_content, text_content, from_email, to)
+    msg = EmailMultiAlternatives(subject=subject_content, body=text_content, to=to)
     msg.attach_alternative(html_content, "text/html")
     msg.send()
 

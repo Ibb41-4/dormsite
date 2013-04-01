@@ -26,11 +26,11 @@ def notify_last_week():
         if not shift.done:
             d = Context({'user': shift.room.current_user(), 'task': shift.task, 'domain': domain, 'current_shift': current_shifts[shift.task]})
 
-            from_email, to = 'no-reply@huissite.hmvp.nl', shift.room.current_user().email
+            to = [shift.room.current_user().email]
             subject_content = subject.render(d)
             text_content = plaintext.render(d)
             html_content = html.render(d)
-            msg = EmailMultiAlternatives(subject_content, text_content, from_email, [to])
+            msg = EmailMultiAlternatives(subject=subject_content, body=text_content, to=to)
             msg.attach_alternative(html_content, "text/html")
             msg.send()
 
@@ -52,10 +52,10 @@ def notify_next_week():
     for shift in current_week.shifts.all():
         d = Context({'user': shift.room.current_user(), 'task': shift.task, 'domain': domain, 'prev_shift': prev_shifts[shift.task]})
 
-        from_email, to = 'no-reply@huissite.hmvp.nl', shift.room.current_user().email
+        to = [shift.room.current_user().email]
         subject_content = subject.render(d)
         text_content = plaintext.render(d)
         html_content = html.render(d)
-        msg = EmailMultiAlternatives(subject_content, text_content, from_email, [to])
+        msg = EmailMultiAlternatives(subject=subject_content, body=text_content, to=to)
         msg.attach_alternative(html_content, "text/html")
         msg.send()

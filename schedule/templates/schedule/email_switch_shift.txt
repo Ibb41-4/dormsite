@@ -1,0 +1,7 @@
+Hoi {{shift1_user.first_name}} en {{shift2_user.first_name}},
+
+Iemand heeft jullie beurt geruild. Klopt dit niet? Verander het hier <http://{{domain}}{% url 'schedule.views.schedule' %}> dan even terug!
+
+Het gaat om de volgende beurten:
+De {{shift1.task}} van {{shift1.week.startdate|date}};
+De {{shift2.task}} van {{shift2.week.startdate|date}};
