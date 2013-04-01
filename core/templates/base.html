@@ -90,10 +90,11 @@
             </footer>
         </div>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.3.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/action.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.9.0.custom.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.form.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/select2.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/action.js"></script>
+        {% block modals %}{% endblock %}
     </body>
 </html>

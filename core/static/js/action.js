@@ -10,48 +10,53 @@ $(function(){
 
     $( ".switchable span" ).draggable({revert: true, revertDuration: 0, snap: true, snapModeType: 'outer'}).disableSelection();
     $( ".switchable span" ).droppable({
-        drop: function( event, ui ) {
-            //$("#replace_name").html($(this).html())
+        drop: function( event, ui )
+        {
+            dragged = ui.draggable;
+            replaced = $(this);
 
-            var first = this;
-            var id1 = first.id.substring(5);
-            var other = ui.draggable.get(0);
-            var id2 = other.id.substring(5);
+            $('#confirm-switch #replace_name1').text(dragged.text());
+            $('#confirm-switch #replace_name2').text(replaced.text());
 
-            function swapNodes(a, b) {
-                var aparent= a.parentNode;
-                var asibling= a.nextSibling===b? a : a.nextSibling;
-                b.parentNode.insertBefore(a, b);
-                aparent.insertBefore(b, asibling);
-            }
-
-            $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {
-                success: function(text){
-                    swapNodes(first.firstChild, other.firstChild);
-                    alert(text);
-                },
-                error: function(jqXHR){
-                    alert(jqXHR.responseText);
-                }
-            });
-            /*
-
-            $("#switch_dialog" ).dialog({
-                height: 140,
-                modal: true,
-                draggable: true,
-                resizable: false,
-                buttons: [
-                    { text: "Ok", click: function() {
-
-                        $( this ).dialog( "close" );
-                    }},
-                    { text: "Annuleer", click: function() {
-                        $( this ).dialog( "close" );
-                    }}
-                ]
-            });*/
+            $('#confirm-switch').modal();
+            $('#confirm-switch .btn-primary').data('first', dragged.data('shift-id'));
+            $('#confirm-switch .btn-primary').data('second', replaced.data('shift-id'));
         }, activeClass: "highlight"
+    });
+
+    $('#confirm-switch .btn-primary').click(function()
+    {
+        var self = $(this);
+        self.button('loading');
+
+        var id1 = $(this).data('first');
+        var id2 = $(this).data('second');
+
+        var show_result = function(text, success)
+        {
+            $('#confirm-switch').modal('hide');
+            self.button('reset');
+            $('.alert span').text(text);
+            $('.alert').toggleClass('alert-success', success);
+            $('.alert').toggleClass('alert-error', !success);
+            $('.alert').show();
+        };
+
+        $.ajax('/schedule/switch/' + id1 + '/' + id2 + '/', {
+            success: function(text){
+                show_result(text, true);
+
+                dragged = $('span[data-shift-id="'+id1+'"]');
+                replaced = $('span[data-shift-id="'+id2+'"]');
+
+                var temp = dragged.text();
+                dragged.text(replaced.text());
+                replaced.text(temp);
+            },
+            error: function(jqXHR){
+                show_result(jqXHR.responseText, false);
+            }
+        });
     });
 
     // bind form and provide a simple callback function

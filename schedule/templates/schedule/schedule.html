@@ -8,32 +8,37 @@
 {% block title %}Schoonmaak rooster{% endblock %}
 
 {% block primary %}
-<table>
-<thead>
-	<tr>
-		<th>Week</th>
-		{% for task in tasks|dictsort:"id" %}
-			<th>{{task.name}}</th>
-		{% endfor %}
-	</tr>
-</thead>
-<tbody>
-	{% for week in data %}
-		<tr class="{{week.type}} {% if week.type != 'past_week' or perms.schedule.can_switch_others %}switchable{% endif %}">
-			<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
-			{% for shift in week.shifts.all|dictsort:"task.id" %}
-				<td>
-					<span id="shift{{shift.pk}}">{{shift.room|current_user:week.startdate}}</span>
-					{% if week.type != 'future_week' %}
-						<input type="checkbox" name="shift_done" value="{{shift.pk}}"
-							{% if shift.done %}checked="checked"{% endif %}
-							{% if week.type == 'past_week' %}disabled="disabled"{% endif %}>
-					{% endif %}
-				</td>
+<div class="alert hide">
+	<a class="close" data-dismiss="alert" href="#">&times;</a>
+	<span>Oh snap!</span>
+</div>
+
+<table class=".table-striped">
+	<thead>
+		<tr>
+			<th>Week</th>
+			{% for task in tasks|dictsort:"id" %}
+				<th>{{task.name}}</th>
 			{% endfor %}
 		</tr>
-	{% endfor %}
-</tbody>
+	</thead>
+	<tbody>
+		{% for week in data %}
+			<tr class="{{week.type}} {% if week.type != 'past_week' or perms.schedule.can_switch_others %}switchable{% endif %}">
+				<td>{{week.startdate|date:"SHORT_DATE_FORMAT" }}</td>
+				{% for shift in week.shifts.all|dictsort:"task.id" %}
+					<td>
+						<span data-shift-id="{{shift.pk}}">{{shift.room|current_user:week.startdate}}</span>
+						{% if week.type != 'future_week' %}
+							<input type="checkbox" name="shift_done" value="{{shift.pk}}"
+								{% if shift.done %}checked="checked"{% endif %}
+								{% if week.type == 'past_week' %}disabled="disabled"{% endif %}>
+						{% endif %}
+					</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
 </table>
 
 <p><a href="{% url 'schedule.views.print_schedule' %}">Print dit rooster.</a> <a href="{% url 'ical_schedule' user.pk %}">Importeer dit in een kalenderdapplicatie.</a></p>
@@ -51,18 +56,20 @@
 <p>
 	<b>Zet op deze lijst een kruisje achter je naam zodra je je beurt hebt gedaan, zodat iedereen kan zien hoe goed je bezig bent!</b>
 </p>
+{% endblock %}
 
-<div class="modal hide fade" id="confirm-switch">
+{% block modals %}
+<div class="modal hide" id="confirm-switch">
     <div class="modal-header">
 	    <button type="button" class="close" data-dismiss="modal" data-target="#confirm-switch" aria-hidden="true">&times;</button>
 	    <h3>Let op!</h3>
 	</div>
 	<div class="modal-body">
-	    <p>Weet je zeker dat je wilt wisselen met <span id="replace_name">naam</span></p>
+	    <p>Weet je zeker dat je <span id="replace_name1">naam</span> wilt wisselen met <span id="replace_name2">naam</span>?</p>
 	</div>
 	<div class="modal-footer">
-	     <button class="btn" data-dismiss="modal" data-target="#confirm-switch"  aria-hidden="true">Close</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn btn-primary" data-loading-text="Saving...">Save changes</button>
     </div>
 </div>
-
 {% endblock %}
