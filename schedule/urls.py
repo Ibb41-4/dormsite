@@ -9,6 +9,7 @@ urlpatterns = patterns('schedule.views',
 
     url(r'^$', 'schedule', name="schedule"),
     url(r'^print/$', 'print_schedule'),
+    url(r'^cron/$', 'cron'),
     url(r'^ical/(?P<user_pk>\d+)/$', ShiftFeed(), name="ical_schedule"),
     url(r'^(?P<pk>\d+)/(?P<toggle>\w+)/', 'toggle'),
     url(r'^switch/(?P<id1>\d+)/(?P<id2>\d+)/', 'switch_shifts'),

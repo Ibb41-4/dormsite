@@ -7,6 +7,12 @@
     <body>
       	<p>Hoi {{user.first_name}},</p>
 
-        <p>Je hebt komende week {{task.name}}-beurt. Vergeet je niet om daar tijd voor vrij te maken? Als je niet kan, ruil je dan met iemand? Vergeet dat niet ook hier aan te passen: {% url 'schedule.views.schedule' %}</p>
+        <p>
+            Je hebt komende week je huistaak "{{task.name}}". Vergeet je niet om daar tijd voor vrij te maken? Als je niet kan, ruil je dan met iemand? Vergeet dat niet ook hier aan te passen: <a href="http://{{domain}}{% url 'schedule.views.schedule' %}">http://{{domain}}{% url 'schedule.views.schedule' %}</a> aangeven.</p></p>
+        {% if not prev_shift.done %}
+            <p>
+                Afgelopen week heeft {{prev_shift.room.current_user.first_name}} zijn of haar huistaak niet gedaan. Ik zou hem vragen of hij je komt helpen met jouw huistaak
+            </p>
+        {% endif %}
     </body>
 </html>

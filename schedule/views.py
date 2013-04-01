@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+from datetime import date
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
@@ -173,3 +174,15 @@ def assign_matrix(startingweek, rooms):
             shift = Shift(task=task, week=current_week, room=room)
             shift.save()
         current_week = current_week.next_week()
+
+
+def cron(request):
+    from .tasks import notify_last_week, notify_next_week
+
+    if date.today().isoweekday() % 7 == 1:
+        notify_last_week()
+
+    if date.today().isoweekday() % 7 == 3:
+        notify_next_week()
+
+    return HttpResponse('')

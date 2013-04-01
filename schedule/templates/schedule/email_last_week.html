@@ -7,8 +7,15 @@
     <body>
         <p>Hoi {{user.first_name}},</p>
 
-        <p>Je hebt vorige week je {{task.name}}-beurt niet gedaan, zou je die zo snel mogelijk willen doen?
-        Als je klaar ben kan je dit met deze link aangeven.</p>
+        <p>
+            Je hebt afgelopen week je huistaak "{{task.name}}" niet gedaan, zou je die vandaag nog willen doen?
+            Als je klaar ben kan je dit <a href="http://{{domain}}{% url 'schedule.views.schedule' %}">hier</a> aangeven.
+        </p>
 
+        {% if not current_shift.done %}
+            <p>
+                Mocht je het vergeten, vraag dan {{current_shift.room.current_user.first_name}} of hij/zij hulp nodig heeft. Dat is natuurlijk wel zo netjes.
+            </p>
+        {% endif %}
     </body>
 </html>
