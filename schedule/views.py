@@ -15,9 +15,14 @@ from schedule.models import Week, Task, Shift
 
 def toggle(request, pk, toggle):
     shift = Shift.objects.get(pk=pk)
-    shift.done = True if toggle == 'on' else False
-    shift.save()
-    return HttpResponse('')
+
+    #only when weeks are in future, or we are still in the first days of the next week
+    if not shift.week.deadline_passed or request.user.is_elder():
+        shift.done = True if toggle == 'on' else False
+        shift.save()
+        return HttpResponse('Ok')
+    else:
+        return HttpResponseForbidden('Not possible')
 
 
 @permission_required('schedule.view_shifts')

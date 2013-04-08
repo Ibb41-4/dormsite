@@ -30,6 +30,11 @@ class Week(models.Model):
             return self.PAST
 
     @property
+    def deadline_passed(self):
+        grace_time = self == Week.get_current_week().previous_week() and date.today().isoweekday() % 7 < 3
+        return self.type == self.PAST and not grace_time
+
+    @property
     def tasks(self):
         return list(Task.objects.filter(shifts__week=self))
 

@@ -32,7 +32,7 @@
 						{% if week.type != 'future_week' %}
 							<input type="checkbox" name="shift_done" value="{{shift.pk}}"
 								{% if shift.done %}checked="checked"{% endif %}
-								{% if week.type == 'past_week' %}disabled="disabled"{% endif %}>
+								{% if week.deadline_passed and not user.is_elder %}disabled="disabled"{% endif %}>
 						{% endif %}
 					</td>
 				{% endfor %}
