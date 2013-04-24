@@ -31,13 +31,14 @@
 </tbody>
 </table>
 
-{% for task in tasks %}
-	{% if task.description %}
-		<div>
-			<h2>{{task.name}}</h2>
-			<p>{{task.description|markdown}}</p>
-		</div>
-	{% endif %}
-{% endfor %}
+<dl>
+	{% regroup tasks by description as description_list %}
+	{% for description in description_list %}
+		{% if description.grouper %}
+			<dt>{{description.list.0.name}}</dt>
+			<dd>{{description.grouper|markdown}}</dd>
+		{% endif %}
+	{% endfor %}
+</dl>
 
 {% endblock %}
