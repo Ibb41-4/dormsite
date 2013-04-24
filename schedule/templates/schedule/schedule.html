@@ -44,10 +44,11 @@
 <p><a href="{% url 'schedule.views.print_schedule' %}">Print dit rooster.</a> <a href="{% url 'ical_schedule' user.pk %}">Importeer dit in een kalenderdapplicatie.</a></p>
 
 <dl>
-	{% for task in tasks %}
-		{% if task.description %}
-			<dt>{{task.name}}</dt>
-			<dd>{{task.description|markdown}}</dd>
+	{% regroup tasks by description as description_list %}
+	{% for description in description_list %}
+		{% if description.grouper %}
+			<dt>{{description.list.0.name}}</dt>
+			<dd>{{description.grouper|markdown}}</dd>
 		{% endif %}
 	{% endfor %}
 </dl>

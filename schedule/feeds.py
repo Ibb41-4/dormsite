@@ -1,4 +1,5 @@
 from django_ical.views import ICalFeed
+from markdown import markdown
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
@@ -35,3 +36,9 @@ class ShiftFeed(ICalFeed):
 
     def item_start_datetime(self, item):
         return item.week.startdate
+
+    def item_end_datetime(self, item):
+        return item.week.next_week().startdate
+
+    def item_transparency(self, item):
+        return 'TRANSPARENT'

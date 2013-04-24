@@ -3,5 +3,5 @@ Hoi {{user.first_name}},
 Je hebt komende week je huistaak "{{task.name}}". Vergeet je niet om daar tijd voor vrij te maken? Als je niet kan, ruil je dan met iemand? Vergeet dat niet ook hier aan te passen: <http://{{domain}}{% url 'schedule.views.schedule' %}>
 
 {% if not prev_shift.done %}
-Afgelopen week heeft {{prev_shift.room.current_user.first_name}} zijn of haar huistaak niet gedaan. Ik zou hem vragen of hij/zij je komt helpen met jouw huistaak
+Afgelopen week heeft {{prev_shift.room.current_user.first_name}} zijn of haar huistaak niet gedaan. Ik zou hem/haar vragen of hij/zij je komt helpen met jouw huistaak
 {% endif%}
