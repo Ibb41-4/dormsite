@@ -36,14 +36,14 @@ def schedule(request):
     for week in weeks:
         assign_weeks(week)
 
-    return render(request, 'schedule/schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
+    return render(request, 'schedule/schedule.html', {'data': weeks, 'tasks': Task.objects.all().order_by('description')})
 
 
 @permission_required('schedule.view_shifts')
 def print_schedule(request):
     current_week = Week.get_current_week()
     weeks = current_week.get_weeks(21)
-    return render(request, 'schedule/print_schedule.html', {'data': weeks, 'tasks': Task.objects.all()})
+    return render(request, 'schedule/print_schedule.html', {'data': weeks, 'tasks': Task.objects.all().order_by('description')})
 
 
 @permission_required('schedule.view_shifts')
