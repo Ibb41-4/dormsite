@@ -15,6 +15,11 @@ def notify_last_week():
     domain = current_site.domain
 
     current_week = Week.get_current_week()
+
+    #skip empty weeks
+    while not current_week.is_filled:
+        current_week = current_week.next_week()
+
     prev_week = current_week.previous_week()
     current_shifts = dict(map(lambda x: (x.task, x), current_week.shifts.all()))
 
@@ -42,6 +47,10 @@ def notify_next_week():
 
     current_week = Week.get_current_week()
     prev_week = current_week.previous_week()
+
+    #skip empty weeks
+    while not prev_week.is_filled:
+        prev_week = prev_week.previous_week()
 
     prev_shifts = dict(map(lambda x: (x.task, x), prev_week.shifts.all()))
 
