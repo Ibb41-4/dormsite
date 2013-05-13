@@ -18,7 +18,7 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.html5_required = True
-        self.helper.form_action = '/'
+        self.helper.form_action = 'edit'
         self.helper.layout = Layout(
             'first_name',
             'last_name',
@@ -35,10 +35,11 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = get_user_model()
+        fields = ('first_name', 'last_name', 'email', 'birthdate', 'phonenumber', 'emergency_phonenumber')
 
 
 class UserChangeForm(UserChangeFormOriginal):
-    class Meta:
+    class Meta(UserChangeFormOriginal.Meta):
         model = get_user_model()
 
 

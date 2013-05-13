@@ -99,7 +99,7 @@ class UserMoveView(CreateView):
 
 class UserView(UpdateView):
     form_class = UserForm
-    success_url = '/user/'
+    success_url = '/'
     model = get_user_model()
 
     def get_object(self):
